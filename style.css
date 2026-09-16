@@ -1,0 +1,172 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #f4f4f9;
+  padding: 15px;
+  color: #333;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 1.4rem;
+  color: #111;
+}
+
+.card {
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.card h2 {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.form-inline {
+  display: flex;
+  gap: 10px;
+}
+
+input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.btn {
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn-primary { background: #007bff; color: #fff; }
+.btn-secondary { background: #6c757d; color: #fff; }
+.btn-success { background: #28a745; color: #fff; font-size: 1rem; margin-top: 15px; }
+
+/* Visualização da Nota */
+#nota-preview {
+  background: #fff;
+  padding: 20px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.nota-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.logo {
+  max-width: 70px;
+  max-height: 70px;
+  object-fit: contain;
+}
+
+.header-texto h2 { margin: 0; font-size: 1.2rem; }
+.header-texto p { font-size: 0.85rem; color: #555; }
+
+.nota-info {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+  font-size: 0.9rem;
+}
+
+.tabela-itens {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 0.85rem;
+}
+
+.tabela-itens th, .tabela-itens td {
+  border-bottom: 1px solid #eee;
+  padding: 6px 4px;
+  text-align: left;
+}
+
+.resumo-valores {
+  margin-top: 15px;
+  text-align: right;
+  font-size: 0.9rem;
+}
+
+.resumo-valores h3 {
+  color: #111;
+  margin-top: 5px;
+}
+
+/* Histórico */
+.historico-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.historico-grid img {
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+/* Botões de ação dentro da tabela */
+.btn-acao {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
+.btn-editar {
+  color: #007bff;
+}
+
+.btn-excluir {
+  color: #dc3545;
+}
+
+.btn-acao:hover {
+  background-color: #f0f0f0;
+}
+
+/* Ocultar botões de ação na hora que html2canvas gerar a imagem */
+.ocultar-na-imagem {
+  display: table-cell;
+}
+
+body.gerando-imagem .ocultar-na-imagem,
+body.gerando-imagem .coluna-acao {
+  display: none !important;
+}

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DMArtFerro - Gerador de Notas</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Biblioteca para converter HTML em Imagem -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+</head>
+<body>
+
+  <main class="container">
+    <h1>Gerador de Pedidos - DMArtFerro</h1>
+
+    <!-- Formulário para Inserção de Dados -->
+    <section class="card">
+      <h2>Adicionar Item</h2>
+      <div class="form-grid">
+        <input type="text" id="codigo" placeholder="Código (ex: T001)">
+        <input type="text" id="descricao" placeholder="Descrição do Produto">
+        <input type="number" id="qtd" placeholder="Qtd" value="1" min="1">
+        <input type="number" id="valorUnit" placeholder="Valor Unitário (R$)" step="0.01">
+      </div>
+
+      <!-- Prévia do valor total desta peça que está sendo digitada -->
+      <div style="margin-bottom: 10px; font-weight: bold; color: #555; text-align: right;">
+        Total do Item: R$ <span id="previaTotalItem">0,00</span>
+      </div>
+
+      <button class="btn btn-primary" onclick="adicionarItem()">+ Adicionar Item</button>
+    </section>
+
+    <!-- Configuração de Desconto -->
+    <section class="card">
+      <h2>Desconto</h2>
+      <div class="form-inline">
+        <input type="number" id="descontoInput" placeholder="Valor do Desconto (R$)" step="0.01">
+        <button class="btn btn-secondary" onclick="aplicarDesconto()">Aplicar Desconto</button>
+      </div>
+    </section>
+
+    <!-- Modelo Visual da Nota (O que vira imagem) -->
+    <section class="card-preview">
+      <div id="nota-preview">
+        <header class="nota-header">
+          <!-- Altere o src para o caminho da sua logo -->
+          <img src="LOGO1.png" alt="DMArtFerro" class="logo" id="logoImg" onerror="this.style.display='none'">
+          <div class="header-texto">
+            <h2>DMArtFerro</h2>
+            <p>Serralheria Artística</p>
+            <p><strong>Contato:</strong> (11) 98441-6554</p>
+          </div>
+        </header>
+
+        <hr>
+
+        <div class="nota-info">
+          <p><strong>Pedido nº:</strong> <span id="numPedido">001</span></p>
+          <p><strong>Data:</strong> <span id="dataAtual">--/--/----</span></p>
+        </div>
+
+        <table class="tabela-itens">
+          <thead>
+            <tr>
+              <th>Cód.</th>
+              <th>Descrição</th>
+              <th>Qtd</th>
+              <th>Unit.</th>
+              <th>Total</th>
+              <th class="coluna-acao">Ação</th> <!-- Nova coluna -->
+            </tr>
+          </thead>
+          <tbody id="corpoTabela">
+            <!-- Itens entram aqui -->
+          </tbody>
+        </table>
+
+        <div class="resumo-valores">
+          <p>Subtotal: R$ <span id="subtotalView">0,00</span></p>
+          <p>Desconto: R$ <span id="descontoView">0,00</span></p>
+          <h3>Total Final: R$ <span id="totalFinalView">0,00</span></h3>
+        </div>
+      </div>
+
+      <button class="btn btn-success" onclick="finalizarPedido()">Finalizar e Gerar Imagem</button>
+    </section>
+
+    <!-- Histórico de Pedidos Salvos -->
+    <section class="card">
+      <h2>Histórico de Pedidos</h2>
+      <div id="historicoGrid" class="historico-grid">
+        <!-- Imagens salvas aparecem aqui -->
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
