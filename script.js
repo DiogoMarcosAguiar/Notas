@@ -106,13 +106,18 @@ function aplicarDesconto() {
 }
 
 // Renderiza a tabela da nota
+
 function renderizarTabela() {
   const corpoTabela = document.getElementById("corpoTabela");
   corpoTabela.innerHTML = "";
 
-  itensPedido.forEach(item => {
+  itensPedido.forEach((item, index) => {
+    // Formata o número do item com zero à esquerda (01, 02, 03...)
+    const numItem = String(index + 1).padStart(2, '0');
+
     const tr = document.createElement("tr");
     tr.innerHTML = `
+      <td style="color: #d4af37; font-weight: bold;">${numItem}</td>
       <td>${item.codigo}</td>
       <td>${item.descricao}</td>
       <td>${item.qtd}</td>
