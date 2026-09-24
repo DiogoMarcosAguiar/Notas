@@ -71,18 +71,101 @@ input {
 .btn-success { background: #28a745; color: #fff; font-size: 1rem; margin-top: 15px; }
 
 /* Visualização da Nota */
+/* ======================================================
+   TEMA DARK PREMIUM COM BORDA DOURADA (DMArtFerro)
+   ====================================================== */
+
+/* Cartão da prévia da nota (O que vira a imagem) */
 #nota-preview {
-  background: #fff;
-  padding: 20px;
-  border-radius: 6px;
-  border: 1px solid #ddd;
+  background-color: #1a1a1a !important; /* Fundo escuro elegante */
+  color: #e0e0e0 !important;             /* Texto claro */
+  padding: 24px;
+  border-radius: 8px;
+  /* Borda dupla metálica dourada */
+  border: 3px double #d4af37 !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Cabeçalho da Nota */
 .nota-header {
   display: flex;
   align-items: center;
   gap: 15px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+}
+
+.nota-header h2 {
+  color: #d4af37 !important; /* Dourado nos títulos */
+  margin: 0;
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.nota-header p {
+  color: #cccccc !important;
+  margin: 2px 0;
+  font-size: 0.9rem;
+}
+
+/* Linha divisória em gradiente dourado */
+#nota-preview hr {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(to right, rgba(212, 175, 55, 0), #d4af37, rgba(212, 175, 55, 0));
+  margin: 15px 0;
+}
+
+/* Informações do Pedido e Cliente */
+.nota-info p {
+  color: #e0e0e0 !important;
+  margin: 4px 0;
+}
+
+.nota-info strong {
+  color: #d4af37 !important;
+}
+
+/* Tabela de Itens em Modo Escuro */
+.tabela-itens {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.tabela-itens th {
+  background-color: #2a2a2a !important;
+  color: #d4af37 !important;
+  border-bottom: 2px solid #d4af37 !important;
+  padding: 8px;
+  text-align: left;
+}
+
+.tabela-itens td {
+  padding: 8px;
+  border-bottom: 1px solid #333333 !important;
+  color: #dddddd !important;
+}
+
+/* Resumo de Valores */
+.resumo-valores {
+  text-align: right;
+  margin-top: 15px;
+  border-top: 1px dashed #d4af37;
+  padding-top: 10px;
+}
+
+.resumo-valores p {
+  margin: 4px 0;
+  color: #cccccc;
+}
+
+.resumo-valores h3 {
+  color: #d4af37 !important;
+  font-size: 1.3rem;
+  margin-top: 8px;
 }
 
 .logo {

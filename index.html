@@ -7,12 +7,24 @@
   <link rel="stylesheet" href="style.css">
   <!-- Biblioteca para converter HTML em Imagem -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
 </head>
 <body>
 
   <main class="container">
     <h1>Gerador de Pedidos - DMArtFerro</h1>
+
+    <!-- Notificação na tela (Substitui Alerts/Popups) -->
+    <div id="statusMsg" class="status-msg" style="display: none;"></div>
+
+    <!-- Dados Iniciais do Pedido e Cliente -->
+    <section class="card">
+      <h2>Dados do Pedido & Cliente</h2>
+      <div class="form-grid">
+        <input type="text" id="inputNumPedido" placeholder="Nº do Pedido (ex: 001)" oninput="atualizarDadosCliente()">
+        <input type="text" id="nomeCliente" placeholder="Nome do Cliente (Opcional)" oninput="atualizarDadosCliente()">
+        <input type="text" id="lojaCliente" placeholder="Nome da Loja/Empresa (Opcional)" oninput="atualizarDadosCliente()">
+      </div>
+    </section>
 
     <!-- Formulário para Inserção de Dados -->
     <section class="card">
@@ -20,11 +32,11 @@
       <div class="form-grid">
         <input type="text" id="codigo" placeholder="Código (ex: T001)">
         <input type="text" id="descricao" placeholder="Descrição do Produto">
-        <input type="number" id="qtd" placeholder="Qtd" value="1" min="1">
-        <input type="number" id="valorUnit" placeholder="Valor Unitário (R$)" step="0.01">
+        <input type="number" id="qtd" placeholder="Qtd" value="1" min="1" oninput="calcularPreviaItem()">
+        <input type="number" id="valorUnit" placeholder="Valor Unitário (R$)" step="0.01" oninput="calcularPreviaItem()">
       </div>
 
-      <!-- Prévia do valor total desta peça que está sendo digitada -->
+      <!-- Prévia do valor total desta peça -->
       <div style="margin-bottom: 10px; font-weight: bold; color: #555; text-align: right;">
         Total do Item: R$ <span id="previaTotalItem">0,00</span>
       </div>
@@ -45,8 +57,7 @@
     <section class="card-preview">
       <div id="nota-preview">
         <header class="nota-header">
-          <!-- Altere o src para o caminho da sua logo -->
-          <img src="LOGO1.png" alt="DMArtFerro" class="logo" id="logoImg" onerror="this.style.display='none'">
+          <img src="LOGO1.jpeg" alt="DMArtFerro" class="logo" id="logoImg" onerror="this.style.display='none'">
           <div class="header-texto">
             <h2>DMArtFerro</h2>
             <p>Serralheria Artística</p>
@@ -57,8 +68,12 @@
         <hr>
 
         <div class="nota-info">
-          <p><strong>Pedido nº:</strong> <span id="numPedido">001</span></p>
+          <p><strong>Pedido nº:</strong> <span id="numPedidoView">001</span></p>
           <p><strong>Data:</strong> <span id="dataAtual">--/--/----</span></p>
+          <div id="clienteContainer" style="display: none; margin-top: 5px;">
+            <p id="clienteView"></p>
+            <p id="lojaView"></p>
+          </div>
         </div>
 
         <table class="tabela-itens">
@@ -69,11 +84,11 @@
               <th>Qtd</th>
               <th>Unit.</th>
               <th>Total</th>
-              <th class="coluna-acao">Ação</th> <!-- Nova coluna -->
+              <th class="coluna-acao">Ação</th>
             </tr>
           </thead>
           <tbody id="corpoTabela">
-            <!-- Itens entram aqui -->
+            <!-- Itens entram aqui via JS -->
           </tbody>
         </table>
 
@@ -84,14 +99,14 @@
         </div>
       </div>
 
-      <button class="btn btn-success" onclick="finalizarPedido()">Finalizar e Gerar Imagem</button>
+      <button class="btn btn-success" onclick="finalizarEGerarNota()">Finalizar e Salvar Nota</button>
     </section>
 
     <!-- Histórico de Pedidos Salvos -->
     <section class="card">
       <h2>Histórico de Pedidos</h2>
       <div id="historicoGrid" class="historico-grid">
-        <!-- Imagens salvas aparecem aqui -->
+        <!-- Notinhas salvas para edição e reuso entram aqui -->
       </div>
     </section>
   </main>
