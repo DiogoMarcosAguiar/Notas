@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DMArtFerro - Gestão Executiva & Financeira</title>
+  <link rel="stylesheet" href="style-financeiro.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Botão Hambúrguer Fixo no Canto Superior Esquerdo -->
+  <button class="btn-hamb" onclick="toggleMenu()" title="Abrir Menu">
+    ☰ Menu
+  </button>
+
+  <!-- Menu Retrátil (Sidebar Drawer) -->
+  <aside class="sidebar-menu" id="sidebarMenu">
+    <div class="sidebar-header">
+      <h3>DMArtFerro</h3>
+      <button class="btn-fechar" onclick="toggleMenu()">✕</button>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="https://diogomarcosaguiar.github.io/Notas/" target="_blank">
+        <span class="icon">📜</span> Gerador de Notas
+      </a>
+      <a href="financeiro.html" class="active">
+        <span class="icon">📊</span> Faturamento & Caixa
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <p>🔒 Acesso Restrito - Equipe DMArtFerro</p>
+    </div>
+  </aside>
+
+  <!-- Overlay para fechar o menu ao clicar fora -->
+  <div class="overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+
+  <!-- Conteúdo Principal -->
+  <main class="container">
+    <header class="header-financeiro">
+      <div class="tag-startup">PROJETO CONFIDENCIAL</div>
+      <h1>DMArtFerro <span class="sub-title">| Gestão Financeira</span></h1>
+      <p>Painel Estratégico de Faturamento, Custos e Lucro Líquido</p>
+    </header>
+
+    <!-- Cards do Dashboard Executivo -->
+    <section class="dashboard-cards">
+      <div class="card-stat entrada">
+        <div class="card-header-icon">
+          <h3>Faturamento Bruto</h3>
+          <span class="badge badge-green">Entradas</span>
+        </div>
+        <p class="valor" id="totalEntradas">R$ 0,00</p>
+      </div>
+
+      <div class="card-stat saida">
+        <div class="card-header-icon">
+          <h3>Custos & Despesas</h3>
+          <span class="badge badge-red">Saídas</span>
+        </div>
+        <p class="valor" id="totalSaidas">R$ 0,00</p>
+      </div>
+
+      <div class="card-stat lucro">
+        <div class="card-header-icon">
+          <h3>Lucro Líquido Real</h3>
+          <span class="badge badge-gold">Resultado</span>
+        </div>
+        <p class="valor" id="totalLucro">R$ 0,00</p>
+      </div>
+    </section>
+
+    <!-- Formulário Premium de Lançamento -->
+    <section class="card-luxo">
+      <div class="card-titulo">
+        <h2>+ Lançamento de Movimentação</h2>
+      </div>
+      <form id="formLancamento" onsubmit="salvarLancamento(event)">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="tipo">Tipo de Operação:</label>
+            <select id="tipo" required>
+              <option value="ENTRADA">🟢 Entrada (Venda / Faturamento)</option>
+              <option value="SAIDA">🔴 Saída (Insumo / Investimento / Custo)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="descricao">Descrição da Movimentação:</label>
+            <input type="text" id="descricao" placeholder="Ex: Venda Tronqueira T001 ou Compra Arame MIG" required>
+          </div>
+
+          <div class="form-group">
+            <label for="valor">Valor Total (R$):</label>
+            <input type="number" id="valor" step="0.01" placeholder="0,00" required>
+          </div>
+
+          <div class="form-group">
+            <label for="categoria">Categoria:</label>
+            <select id="categoria" required>
+              <option value="Venda Peça">Venda de Peças (Tronqueiras, Castiçais, etc.)</option>
+              <option value="Insumos">Insumos (Arame MIG, Gás, Discos, Tintas)</option>
+              <option value="Ferramental">Ferramental & Máquinas</option>
+              <option value="Despesa Fixa">Despesas Fixas (Luz, Internet, Aluguel)</option>
+              <option value="Outros">Outros Investimentos</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="dataLancamento">Data da Operação:</label>
+            <input type="date" id="dataLancamento" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-gold-submit">Registrar Operação no Banco</button>
+      </form>
+    </section>
+
+    <!-- Tabela Estilizada de Histórico -->
+    <section class="card-luxo">
+      <div class="card-titulo">
+        <h2>Histórico de Atividades Financeiras</h2>
+      </div>
+      <div class="tabela-wrapper">
+        <table class="tabela-luxo">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Fluxo</th>
+              <th>Descrição</th>
+              <th>Categoria</th>
+              <th>Valor (R$)</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaHistorico">
+            <!-- Dados carregados via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="financeiro.js"></script>
+</body>
+</html>

@@ -307,3 +307,12 @@ function excluirPedidoHistorico(id) {
   renderizarHistorico();
   mostrarMensagem("Nota removida.");
 }
+
+// Função para abrir e fechar o Menu Retrátil
+function toggleMenu() {
+  const sidebar = document.getElementById("sidebarMenu");
+  const overlay = document.getElementById("menuOverlay");
+  
+  sidebar.classList.toggle("open");
+  overlay.classList.toggle("active");
+}
