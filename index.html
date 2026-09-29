@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DMArtFerro - Emissão Executiva de Notas</title>
+  <link rel="icon" href="LOGO1.jpeg" type="image/png">
+  <link rel="icon" href="LOGO1.jpeg" sizes="32x32">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
@@ -41,7 +43,7 @@
     <header class="header-financeiro">
       <div class="tag-startup">SISTEMA EMISSOR DE NOTAS</div>
       <h1>DMArtFerro <span class="sub-title">| Gestão de Pedidos</span></h1>
-      <p>Gerador Profissional de Notas e Orçamentos</p>
+      <p>Gerador Notas e Orçamentos</p>
     </header>
 
     <!-- Card de Cadastro de Dados da Nota / Pedido -->
@@ -78,11 +80,11 @@
         <div class="form-grid">
           <div class="form-group">
             <label for="codigoItem">Código da Peça:</label>
-            <input type="text" id="codigoItem" placeholder="Ex: T001, C001, F001" required>
+            <input type="text" id="codigoItem" placeholder="T001, C001, F001, P001" required>
           </div>
           <div class="form-group">
             <label for="descricaoItem">Descrição do Produto:</label>
-            <input type="text" id="descricaoItem" placeholder="Ex: Tronqueira Personalizada em Ferro" required>
+            <input type="text" id="descricaoItem" placeholder="Tronqueira, Castiçal, Ferro" required>
           </div>
           <div class="form-group">
             <label for="qtdItem">Quantidade:</label>
@@ -103,19 +105,48 @@
         <h2>👁️ Prévia da Nota (Visual da Imagem)</h2>
       </div>
 
-      <div id="nota-preview">
-        <!-- Cabeçalho Centralizado da Nota -->
-        <header class="nota-header">
-          <div class="header-texto">
-            <img src="LOGO1.jpeg" alt="Logo DMArtFerro" class="logo-circulo">
-            <h2>DMArtFerro</h2>
-            <p>Serralheria Artística</p>
-            <p><strong>Contato:</strong> (11) 98441-6554</p>
-            <div class="nota-observacoes"></div>
-              <p>Obrigado pela preferência e confiança!</p>
-            </div>
-          </div>
-          </div>
+      <!-- ESTA É A ÁREA QUE O HTML2CANVAS CAPTURA -->
+      <div id="nota-preview" style="padding: 20px; background-color: #1a1a1a; color: #ffffff;">
+
+      <!-- 1. Cabeçalho (Suas Informações Pessoais / Empresa) -->
+      <div class="nota-header">
+        <h2>DMArtFerro</h2>
+        <p>Serralheria Artística</p>
+        <p>📞 Contato: (11) 98441-6554</p>
+        <p>📧 Email: diogo.m.aguiar30@gmail.com</p>
+
+      </div>
+
+
+      <!-- 3. Tabela de Itens (Tem que estar DENTRO do #nota-preview) -->
+      <table class="tabela-itens" style="width: 100%;">
+        <thead>
+          <tr>
+            <th>Cód</th>
+            <th>Descrição</th>
+            <th>Qtd</th>
+            <th>V. Unit</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <!-- O JavaScript preenche essa tbody! -->
+        <tbody id="corpoTabelaNota"></tbody>
+      </table>
+
+      <!-- 4. Totalizador -->
+      <div class="nota-total" style="text-align: right; margin-top: 10px;">
+        <h3>Total: <span id="lblTotalNota">R$ 0,00</span></h3>
+      </div>
+
+      <!-- 5. QR Code Pix -->
+      <div id="qrCodeContainer" style="display: none; text-align: center; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #444;">
+        <p style="margin: 0; font-size: 0.75rem; color: #d4af37; font-weight: bold;">💳 Pagamento via Pix</p>
+        <img id="imgPixNota" src="QRCodePix.jpeg" alt="QR Code Pix" style="width: 110px; height: 110px; margin: 5px auto; display: block;">
+      </div>
+
+    </div>
+
+
         </header>
 
         <hr>
@@ -189,6 +220,56 @@
     </table>
   </div>
 </section>
+
+<section class="card-luxo">
+    <!-- SEÇÃO DE CONSULTA DE NOTAS -->
+<div class="card-painel" style="margin-top: 20px;">
+  <h2>📋 Histórico e Consulta de Notas 💾</h2>
+  
+  <!-- Campo de Pesquisa -->
+  <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+    <input type="text" id="txtBuscaNota" placeholder="Buscar por Nº Pedido ou Nome do Cliente..." oninput="filtrarNotasHistorico()" style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #444; background: #222; color: #fff;">
+  </div>
+
+  <!-- Tabela de Notas Salvas -->
+  <div style="overflow-x: auto;">
+    <table class="tabela-itens" style="width: 100%;">
+      <thead>
+        <tr>
+          <th>Nº Pedido</th>
+          <th>Data</th>
+          <th>Cliente</th>
+          <th>Total</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="corpoTabelaHistoricoNotas">
+        <!-- O JS vai preencher esta tabela -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL / JANELA PARA VER O DETALHE DA NOTA -->
+<div id="modalDetalheNota" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; z-index: 9999;">
+  <div style="background: #1a1a1a; border: 1px solid #d4af37; border-radius: 8px; padding: 20px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px;">
+      <h3 style="color: #d4af37; margin: 0;">Detalhes da Nota</h3>
+      <button onclick="fecharModalNota()" style="background: transparent; color: #ff5555; border: none; font-size: 1.2rem; cursor: pointer;">✖</button>
+    </div>
+    
+    <!-- Conteúdo da Nota Selecionada -->
+    <div id="conteudoModalNota" style="color: #fff;"></div>
+    
+    <div style="margin-top: 20px; text-align: right;">
+      <button onclick="fecharModalNota()" style="padding: 8px 16px; background: #444; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Fechar</button>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+
   </main>
 
   <script src="script.js"></script>

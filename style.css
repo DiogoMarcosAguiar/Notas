@@ -260,12 +260,8 @@ input:focus, select:focus {
    PRÉVIA DA NOTA (#nota-preview)
    ====================================================== */
 #nota-preview {
-  background-color: #1a1a1a !important;
-  color: #e0e0e0 !important;
-  padding: 28px;
-  border-radius: 14px;
-  border: 2px double #d4af37 !important;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+  height: auto !important;
+  overflow: visible !important;
 }
 
 .nota-header {
