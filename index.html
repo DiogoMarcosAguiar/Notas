@@ -3,19 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>DMArtFerro - Gerador de Notas</title>
+  <title>DMArtFerro - Emissão Executiva de Notas</title>
   <link rel="stylesheet" href="style.css">
-  <!-- Biblioteca para converter HTML em Imagem -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
+
   <!-- Botão Hambúrguer Fixo no Canto Superior Esquerdo -->
   <button class="btn-hamb" onclick="toggleMenu()" title="Abrir Menu">
     ☰ Menu
   </button>
-
-  <a><img src="LOGO1.jpeg" , class="logo" style="text-align: center;" width="10%",></a>
 
   <!-- Menu Retrátil (Sidebar Drawer) -->
   <aside class="sidebar-menu" id="sidebarMenu">
@@ -27,126 +24,155 @@
       <a href="index.html" class="active">
         <span class="icon">📜</span> Gerador de Notas
       </a>
-      <a href="Financeiro.html">
+      <a href="financeiro.html" class="active">
         <span class="icon">📊</span> Faturamento & Caixa
       </a>
     </nav>
     <div class="sidebar-footer">
-      <p>🔒 Acesso Restrito - Equipe DMArtFerro</p>
+      <p>🔒 Acesso Restrito 🔒 - Somente Equipe DMArtFerro</p>
     </div>
   </aside>
 
   <!-- Overlay para fechar o menu ao clicar fora -->
   <div class="overlay" id="menuOverlay" onclick="toggleMenu()"></div>
 
-  <!-- Conteúdo Principal do Gerador de Notas -->
+  <!-- Conteúdo Principal -->
   <main class="container">
     <header class="header-financeiro">
-      <div class="tag-startup">SISTEMA EMISSOR</div>
-      <h1>DMArtFerro <span class="sub-title">| Emissão de Notas</span></h1><br>
-      <h2>Gerador de Pedidos</h2><br>
+      <div class="tag-startup">SISTEMA EMISSOR DE NOTAS</div>
+      <h1>DMArtFerro <span class="sub-title">| Gestão de Pedidos</span></h1>
+      <p>Gerador Profissional de Notas e Orçamentos</p>
+    </header>
 
- 
-
-    <!-- Notificação na tela (Substitui Alerts/Popups) -->
-    <div id="statusMsg" class="status-msg" style="display: none;"></div>
-
-    <!-- Dados Iniciais do Pedido e Cliente -->
-    <section class="card">
-      <h2>Dados do Pedido & Cliente</h2>
+    <!-- Card de Cadastro de Dados da Nota / Pedido -->
+    <section class="card-luxo">
+      <div class="card-titulo">
+        <h2>📋 Informações do Pedido & Cliente</h2>
+      </div>
       <div class="form-grid">
-        <input type="text" id="inputNumPedido" placeholder="Nº do Pedido (ex: 001)" oninput="atualizarDadosCliente()">
-        <input type="text" id="nomeCliente" placeholder="Nome do Cliente (Opcional)" oninput="atualizarDadosCliente()">
-        <input type="text" id="lojaCliente" placeholder="Nome da Loja/Empresa (Opcional)" oninput="atualizarDadosCliente()">
-      </div>
-    </section>
-
-    <!-- Formulário para Inserção de Dados -->
-    <section class="card">
-      <h2>Adicionar Item</h2>
-      <div class="form-grid">
-        <input type="text" id="codigo" placeholder="Código (ex: T001)">
-        <input type="text" id="descricao" placeholder="Descrição do Produto">
-        <input type="number" id="qtd" placeholder="Qtd" value="1" min="1" oninput="calcularPreviaItem()">
-        <input type="number" id="valorUnit" placeholder="Valor Unitário (R$)" step="0.01" oninput="calcularPreviaItem()">
-      </div>
-
-      <!-- Prévia do valor total desta peça -->
-      <div style="margin-bottom: 10px; font-weight: bold; color: #555; text-align: right;">
-        Total do Item: R$ <span id="previaTotalItem">0,00</span>
-      </div>
-
-      <button class="btn btn-primary" onclick="adicionarItem()">+ Adicionar Item</button>
-    </section>
-
-    <!-- Configuração de Desconto -->
-    <section class="card">
-      <h2>Desconto</h2>
-      <div class="form-inline">
-        <input type="number" id="descontoInput" placeholder="Valor do Desconto (R$)" step="0.01">
-        <button class="btn btn-secondary" onclick="aplicarDesconto()">Aplicar Desconto</button>
-      </div>
-    </section>
-
-    <!-- Modelo Visual da Nota (O que vira imagem) -->
-    <section class="card-preview">
-      <div id="nota-preview">
-       <header class="nota-header">
-        <img src="LOGO1.jpeg" alt="DMArtFerro" id="logoImg" width="12%">
-        <div class="header-texto">
-          <h2>DMArtFerro</h2>
-          <p>Serralheria Artística</p>
-          <p><strong>Contato:</strong> (11) 98441-6554</p>
+        <div class="form-group">
+          <label for="numPedido">Nº do Pedido:</label>
+          <input type="text" id="numPedido" placeholder="Ex: 001">
         </div>
-      </header>
+        <div class="form-group">
+          <label for="nomeCliente">Nome do Cliente:</label>
+          <input type="text" id="nomeCliente" placeholder="Ex: João Silva">
+        </div>
+        <div class="form-group">
+          <label for="contatoCliente">Contato / Telefone:</label>
+          <input type="text" id="contatoCliente" placeholder="Ex: (11) 99999-9999">
+        </div>
+        <div class="form-group">
+          <label for="dataPedido">Data da Nota:</label>
+          <input type="date" id="dataPedido">
+        </div>
+      </div>
+    </section>
+
+    <!-- Card do Formulário de Adicionar Itens -->
+    <section class="card-luxo">
+      <div class="card-titulo">
+        <h2>🛠️ Adicionar Peça / Item à Nota</h2>
+      </div>
+      <form id="formAdicionarItem" onsubmit="adicionarItem(event)">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="codigoItem">Código da Peça:</label>
+            <input type="text" id="codigoItem" placeholder="Ex: T001, C001, F001" required>
+          </div>
+          <div class="form-group">
+            <label for="descricaoItem">Descrição do Produto:</label>
+            <input type="text" id="descricaoItem" placeholder="Ex: Tronqueira Personalizada em Ferro" required>
+          </div>
+          <div class="form-group">
+            <label for="qtdItem">Quantidade:</label>
+            <input type="number" id="qtdItem" min="1" value="1" required>
+          </div>
+          <div class="form-group">
+            <label for="valorUnitItem">Valor Unitário (R$):</label>
+            <input type="number" id="valorUnitItem" step="0.01" placeholder="0,00" required>
+          </div>
+        </div>
+        <button type="submit" class="btn-gold-submit">+ Adicionar Item à Tabela</button>
+      </form>
+    </section>
+
+    <!-- Card da Prévia da Nota (O que vira a Imagem da Notinha) -->
+    <section class="card-luxo">
+      <div class="card-titulo">
+        <h2>👁️ Prévia da Nota (Visual da Imagem)</h2>
+      </div>
+
+      <div id="nota-preview">
+        <!-- Cabeçalho Centralizado da Nota -->
+        <header class="nota-header">
+          <div class="header-texto">
+            <img src="LOGO1.jpeg" alt="Logo DMArtFerro" class="logo-circulo">
+            <h2>DMArtFerro</h2>
+            <p>Serralheria Artística</p>
+            <p><strong>Contato:</strong> (11) 98441-6554</p>
+          </div>
+        </header>
 
         <hr>
 
-        <div class="nota-info">
-          <p><strong>Pedido nº:</strong> <span id="numPedidoView">001</span></p>
-          <p><strong>Data:</strong> <span id="dataAtual">--/--/----</span></p>
-          <div id="clienteContainer" style="display: none; margin-top: 5px;">
-            <p id="clienteView"></p>
-            <p id="lojaView"></p>
-          </div>
+        <!-- Informações do Pedido e Cliente -->
+        <div class="nota-info-grid">
+          <p><strong>Nº do Pedido:</strong> <span id="viewNumPedido">001</span></p>
+          <p><strong>Data:</strong> <span id="viewDataPedido">--/--/----</span></p>
+          <p><strong>Cliente:</strong> <span id="viewNomeCliente">--</span></p>
+          <p><strong>Contato:</strong> <span id="viewContatoCliente">--</span></p>
         </div>
 
-        <table class="tabela-itens">
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Cód.</th>
-              <th>Descrição</th>
-              <th>Qtd</th>
-              <th>Unit.</th>
-              <th>Total</th>
-              <th class="coluna-acao">Ação</th>
-            </tr>
-          </thead>
-          <tbody id="corpoTabela">
-            <!-- Itens entram aqui via JS -->
-          </tbody>
-        </table>
+        <hr>
 
+        <!-- Tabela de Itens em Destaque Dark/Dourado -->
+        <div class="tabela-wrapper">
+          <table class="tabela-itens">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Cód.</th>
+                <th>Descrição</th>
+                <th>Qtd</th>
+                <th>Unit.</th>
+                <th>Total</th>
+                <th class="coluna-acao">Ação</th>
+              </tr>
+            </thead>
+            <tbody id="corpoTabela">
+              <!-- Itens entram via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Resumo de Valores -->
         <div class="resumo-valores">
-          <p>Subtotal: R$ <span id="subtotalView">0,00</span></p>
-          <p>Desconto: R$ <span id="descontoView">0,00</span></p>
-          <h3>Total Final: R$ <span id="totalFinalView">0,00</span></h3>
+          <p>Total de Itens: <span id="totalQtdItens">0</span></p>
+          <h3>VALOR TOTAL: <span id="valorTotalNota">R$ 0,00</span></h3>
+        </div>
+
+        <!-- Bloco do Pix Exclusivo -->
+        <div class="pix-container">
+          <div class="pix-titulo">💳 Dados para Pagamento via Pix</div>
+          <p><strong>Chave Pix:</strong> CPF: 336459198-99</p>
+          <p><strong>Favorecido:</strong> Diogo Marcos Aguiar / DMArtFerro</p>
+          <p><strong>Banco:</strong> Mercado Pago / Nubank</p>
         </div>
       </div>
 
-      <button class="btn btn-success" onclick="finalizarEGerarNota()">Finalizar e Salvar Nota</button>
-    </section>
-
-    <!-- Histórico de Pedidos Salvos -->
-    <section class="card">
-      <h2>Histórico de Pedidos</h2>
-      <div id="historicoGrid" class="historico-grid">
-        <!-- Notinhas salvas para edição e reuso entram aqui -->
+      <!-- Botão para Baixar a Nota -->
+      <div style="margin-top: 25px;">
+        <button class="btn-gold-submit" onclick="gerarEBaixarImagemNota()">📸 Baixar Notinha em Imagem (PNG)</button>
       </div>
     </section>
   </main>
 
   <script src="script.js"></script>
+  <!-- Inclua a biblioteca do html2canvas e os scripts no final do body -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="storage.js"></script>
+  <script src="script.js"></script>
+</body>
 </body>
 </html>

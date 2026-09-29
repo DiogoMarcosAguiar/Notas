@@ -14,19 +14,105 @@ body {
   padding: 20px;
   padding-top: 60px; /* Espaço pro botão hambúrguer */
 }
+/* ======================================================
+   ESPAÇAMENTO E CARDS SEPARADOS (DMArtFerro Luxo)
+   ====================================================== */
 
+/* 1. Espaçamento do container principal */
 .container {
   max-width: 1100px;
   margin: 0 auto;
+  padding: 0 15px;
 }
 
-/* Header Executivo */
+.nota-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+/* Arredondamento do Logotipo na Notinha */
+.nota-header img.logo-circulo {
+  width: 90px;                  /* Largura fixa para manter o círculo perfeito */
+  height: 90px;                 /* Altura igual à largura */
+  border-radius: 50%;           /* Faz a imagem ficar 100% circular */
+  object-fit: cover;            /* Evita que a imagem fique esticada ou deformada */
+  border: 2px solid #d4af37;    /* Borda fininha dourada em volta do círculo */
+  display: block;
+  margin: 0 auto;
+}
+
+/* 2. Header afastado das placas abaixo */
 .header-financeiro {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 35px; /* Aumentado o afastamento */
   border-bottom: 2px double #d4af37;
-  padding-bottom: 15px;
-  position: relative;
+  padding-bottom: 20px;
+}
+
+/* 3. Cards do Dashboard (Faturamento, Gastos, Lucro) */
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;            /* Espaço maior entre cada card do topo */
+  margin-bottom: 35px;  /* Afasta o dashboard do formulário */
+}
+
+.card-stat {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;  /* Bordas arredondadas bem suavizadas */
+  padding: 22px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* 4. Blocos do Form e da Tabela (Módulos Separados) */
+.card-luxo {
+  background: #1a1a1a;
+  border: 2px double #d4af37;
+  border-radius: 14px;  /* Bordas bem arredondadas */
+  padding: 28px;
+  margin-bottom: 35px;  /* Garante que o formulário NUNCA encoste na tabela */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+}
+
+/* 5. Espaçamento entre os campos do Formulário */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;            /* Espaço entre os inputs */
+  margin-bottom: 25px;  /* Afasta os campos do botão de salvar */
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;             /* Espaço entre o label e o input */
+}
+
+input, select {
+  background: #242424;
+  border: 1px solid #444;
+  color: #ffffff;
+  padding: 12px 14px;
+  border-radius: 8px;   /* Arredondamento suave nos inputs */
+  font-size: 0.95rem;
+}
+
+/* 6. Tabela com linhas espaçadas e bordas arredondadas na estrutura */
+.tabela-wrapper {
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid #333;
+}
+
+.tabela-luxo th, 
+.tabela-luxo td {
+  padding: 14px 16px;   /* Aumenta o respiro interno das linhas da tabela */
 }
 
 .tag-startup {

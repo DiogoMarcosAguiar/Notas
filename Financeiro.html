@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DMArtFerro - Gestão Executiva & Financeira</title>
   <link rel="stylesheet" href="style-financeiro.css">
+   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -21,7 +22,7 @@
       <button class="btn-fechar" onclick="toggleMenu()">✕</button>
     </div>
     <nav class="sidebar-nav">
-      <a href="https://diogomarcosaguiar.github.io/Notas/" target="_blank">
+      <a href="index.html" class="active">
         <span class="icon">📜</span> Gerador de Notas
       </a>
       <a href="financeiro.html" class="active">
@@ -36,11 +37,14 @@
   <!-- Overlay para fechar o menu ao clicar fora -->
   <div class="overlay" id="menuOverlay" onclick="toggleMenu()"></div>
 
-  <!-- Conteúdo Principal -->
+
+     <!-- Conteúdo Principal -->
   <main class="container">
     <header class="header-financeiro">
-      <div class="tag-startup">PROJETO CONFIDENCIAL</div>
-      <h1>DMArtFerro <span class="sub-title">| Gestão Financeira</span></h1>
+       
+      <div class="tag-startup">CONTROLE FINANCEIRO</div>
+    
+       <h1>DMArtFerro <span class="sub-title">| Gestão Financeira</span></h1>
       <p>Painel Estratégico de Faturamento, Custos e Lucro Líquido</p>
     </header>
 
@@ -81,14 +85,14 @@
           <div class="form-group">
             <label for="tipo">Tipo de Operação:</label>
             <select id="tipo" required>
-              <option value="ENTRADA">🟢 Entrada (Venda / Faturamento)</option>
-              <option value="SAIDA">🔴 Saída (Insumo / Investimento / Custo)</option>
+              <option value="ENTRADA">🟢 Entrada 🟢 </option>
+              <option value="SAIDA">🔴 Saída 🔴 </option>
             </select>
           </div>
 
           <div class="form-group">
-            <label for="descricao">Descrição da Movimentação:</label>
-            <input type="text" id="descricao" placeholder="Ex: Venda Tronqueira T001 ou Compra Arame MIG" required>
+            <label for="descricao">Descrição:</label>
+            <input type="text" id="descricao" placeholder="Produto" required>
           </div>
 
           <div class="form-group">
@@ -99,10 +103,10 @@
           <div class="form-group">
             <label for="categoria">Categoria:</label>
             <select id="categoria" required>
-              <option value="Venda Peça">Venda de Peças (Tronqueiras, Castiçais, etc.)</option>
-              <option value="Insumos">Insumos (Arame MIG, Gás, Discos, Tintas)</option>
-              <option value="Ferramental">Ferramental & Máquinas</option>
-              <option value="Despesa Fixa">Despesas Fixas (Luz, Internet, Aluguel)</option>
+              <option value="Venda Peça">Venda de Produtos</option>
+              <option value="Insumos">Insumos</option>
+              <option value="Ferramental">Ferramenta</option>
+              <option value="Despesa Fixa">Outras despesas(Luz)</option>
               <option value="Outros">Outros Investimentos</option>
             </select>
           </div>
@@ -113,14 +117,14 @@
           </div>
         </div>
 
-        <button type="submit" class="btn-gold-submit">Registrar Operação no Banco</button>
+        <button type="submit" class="btn-gold-submit">Registrar Operação</button>
       </form>
     </section>
 
     <!-- Tabela Estilizada de Histórico -->
     <section class="card-luxo">
       <div class="card-titulo">
-        <h2>Histórico de Atividades Financeiras</h2>
+        <h2>Histórico</h2>
       </div>
       <div class="tabela-wrapper">
         <table class="tabela-luxo">
@@ -140,8 +144,83 @@
         </table>
       </div>
     </section>
+
+    <!-- Cards de Resumo Financeiro (Visível na Tela) -->
+<section class="dashboard-cards">
+  <div class="card-stat card-faturamento">
+    <div class="card-icon">💰</div>
+    <div class="card-info">
+      <p class="card-rotulo">Faturamento Total</p>
+      <h3 id="txtFaturamento">R$ 0,00</h3>
+    </div>
+  </div>
+
+  <div class="card-stat card-custos">
+    <div class="card-icon">💸</div>
+    <div class="card-info">
+      <p class="card-rotulo">Custos & Despesas</p>
+      <h3 id="txtCustos">R$ 0,00</h3>
+    </div>
+  </div>
+
+  <div class="card-stat card-lucro">
+    <div class="card-icon">📈</div>
+    <div class="card-info">
+      <p class="card-rotulo">Lucro Líquido Real</p>
+      <h3 id="txtLucro">R$ 0,00</h3>
+    </div>
+  </div>
+</section>
+
+<!-- Tabela de Lançamentos Visíveis -->
+<section class="card-luxo">
+  <div class="card-titulo">
+    <h2>📊 Histórico de Entradas & Saídas</h2>
+  </div>
+  <div class="tabela-wrapper">
+    <table class="tabela-itens">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Descrição</th>
+          <th>Tipo</th>
+          <th>Valor (R$)</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+      <tbody id="corpoTabelaFinanceiro">
+        <!-- Linhas dos lançamentos entram automaticamente via JS -->
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+    <!-- Card de Gerenciamento de Dados & Backup -->
+<section class="card-luxo">
+  <div class="card-titulo">
+    <h2>💾 Gestão de Dados & Segurança</h2>
+  </div>
+  <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+    <button class="btn-gold-submit" style="flex: 1; min-width: 200px;" onclick="exportarBackup()">
+      📥 Baixar Backup dos Dados (.JSON)
+    </button>
+    <label class="btn-gold-submit" style="flex: 1; min-width: 200px; text-align: center; cursor: pointer; background: #2a2a2a; color: #d4af37; border: 1px solid #d4af37;">
+      📤 Restaurar Backup
+      <input type="file" id="inputBackup" accept=".json" onchange="importarBackup(event)" style="display: none;">
+    </label>
+  </div>
+</section>
+
+
+
   </main>
 
   <script src="financeiro.js"></script>
+  <!-- Inclua a biblioteca do html2canvas e os scripts no final do body -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="storage.js"></script>
+  <script src="script.js"></script>
+</body>
 </body>
 </html>

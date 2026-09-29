@@ -163,3 +163,54 @@ function toggleMenu() {
   sidebar.classList.toggle("open");
   overlay.classList.toggle("active");
 }
+
+// Função para atualizar os cards de Lucro e Custo na tela
+function atualizarDashboardFinanceiro() {
+  const historico = obterFinanceiroSalvo(); // Busca os dados do storage.js
+  
+  let faturamento = 0;
+  let custos = 0;
+  const tabelaCorpo = document.getElementById('corpoTabelaFinanceiro');
+  
+  if (tabelaCorpo) tabelaCorpo.innerHTML = '';
+
+  historico.forEach((item, index) => {
+    const valor = parseFloat(item.valor) || 0;
+    
+    if (item.tipo === 'Entrada' || item.tipo === 'Venda') {
+      faturamento += valor;
+    } else if (item.tipo === 'Saida' || item.tipo === 'Custo') {
+      custos += valor;
+    }
+
+    // Preenche a tabela visual
+    if (tabelaCorpo) {
+      const tr = document.createElement('tr');
+      const corTipo = (item.tipo === 'Entrada' || item.tipo === 'Venda') ? '#4caf50' : '#f44336';
+      
+      tr.innerHTML = `
+        <td>${item.data || '--'}</td>
+        <td>${item.descricao}</td>
+        <td style="color: ${corTipo}; font-weight: bold;">${item.tipo}</td>
+        <td>R$ ${valor.toFixed(2).replace('.', ',')}</td>
+        <td>
+          <button onclick="removerLancamento(${index})" style="background:none; border:none; color:#f44336; cursor:pointer;">🗑️</button>
+        </td>
+      `;
+      tabelaCorpo.appendChild(tr);
+    }
+  });
+
+  const lucro = faturamento - custos;
+
+  // Atualiza os valores visíveis nos Cards
+  document.getElementById('txtFaturamento').innerText = `R$ ${faturamento.toFixed(2).replace('.', ',')}`;
+  document.getElementById('txtCustos').innerText = `R$ ${custos.toFixed(2).replace('.', ',')}`;
+  
+  const elLucro = document.getElementById('txtLucro');
+  elLucro.innerText = `R$ ${lucro.toFixed(2).replace('.', ',')}`;
+  elLucro.style.color = lucro >= 0 ? '#d4af37' : '#f44336';
+}
+
+// Carrega os dados visíveis assim que a página abre
+document.addEventListener('DOMContentLoaded', atualizarDashboardFinanceiro);
