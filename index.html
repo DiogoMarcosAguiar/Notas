@@ -111,6 +111,10 @@
             <h2>DMArtFerro</h2>
             <p>Serralheria Artística</p>
             <p><strong>Contato:</strong> (11) 98441-6554</p>
+            <div class="nota-observacoes"></div>
+              <p>Obrigado pela preferência e confiança!</p>
+            </div>
+          </div>
           </div>
         </header>
 
@@ -152,20 +156,39 @@
           <h3>VALOR TOTAL: <span id="valorTotalNota">R$ 0,00</span></h3>
         </div>
 
-        <!-- Bloco do Pix Exclusivo -->
-        <div class="pix-container">
-          <div class="pix-titulo">💳 Dados para Pagamento via Pix</div>
-          <p><strong>Chave Pix:</strong> CPF: 336459198-99</p>
-          <p><strong>Favorecido:</strong> Diogo Marcos Aguiar / DMArtFerro</p>
-          <p><strong>Banco:</strong> Mercado Pago / Nubank</p>
+      
         </div>
       </div>
 
       <!-- Botão para Baixar a Nota -->
       <div style="margin-top: 25px;">
-        <button class="btn-gold-submit" onclick="gerarEBaixarImagemNota()">📸 Baixar Notinha em Imagem (PNG)</button>
+        <button class="btn-gold-submit" onclick="gerarEBaixarImagemNota()">📸 Baixar Nota</button>
       </div>
     </section>
+
+    <!-- Card do Histórico de Notas Emitidas -->
+<section class="card-luxo">
+  <div class="card-titulo">
+    <h2>📜 Histórico de Notas Emitidas</h2>
+  </div>
+  <div class="tabela-wrapper">
+    <table class="tabela-itens">
+      <thead>
+        <tr>
+          <th>Nº Pedido</th>
+          <th>Data</th>
+          <th>Cliente</th>
+          <th>Qtd Peças</th>
+          <th>Valor Total</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="corpoHistoricoNotas">
+        <!-- Notas salvas entrarão aqui automaticamente -->
+      </tbody>
+    </table>
+  </div>
+</section>
   </main>
 
   <script src="script.js"></script>
