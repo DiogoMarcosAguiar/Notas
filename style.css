@@ -93,7 +93,7 @@ body {
   height: 100%;
   background-color: #181818;
   border-right: 2px double #d4af37;
-  z-index: 1001;
+  z-index: 1005; /* <--- Aumentado de 1001 para 1005 */
   transition: 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
@@ -101,8 +101,8 @@ body {
   box-shadow: 5px 0 20px rgba(0,0,0,0.8);
 }
 
-.sidebar-menu.open {
-  left: 0;
+.sidebar-menu.active {
+  left: 0 !important;
 }
 
 .sidebar-header {

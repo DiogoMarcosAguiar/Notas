@@ -164,3 +164,13 @@ async function excluirNotaHistorico(idNota) {
 document.addEventListener('DOMContentLoaded', () => {
   carregarNotasNuvem();
 });
+
+function toggleMenu() {
+  const sidebar = document.getElementById('sidebarMenu');
+  const overlay = document.getElementById('menuOverlay');
+  
+  if (sidebar && overlay) {
+    sidebar.classList.toggle('active');
+    overlay.classList.toggle('active');
+  }
+}

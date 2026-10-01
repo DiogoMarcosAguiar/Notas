@@ -1,32 +1,76 @@
-// CONFIGURAÇÃO DO SUPABASE
-// Substitua com os seus dados reais entre as aspas:
-const SUPABASE_URL = "https://hhlfilsjtkmvhuaivezc.supabase.co";
-const SUPABASE_KEY = "sb_publishable_fckaKNrimsB5t8bz1p1WPA_oIU-F48r";
-
-// Conexão com o Supabase
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
 let lancamentos = [];
 
 // Salva um novo lançamento no Supabase
 async function salvarLancamento(event) {
-  event.preventDefault();
+  // Garante que só chama o preventDefault se o objeto 'event' tiver sido passado
+  if (event && typeof event.preventDefault === 'function') {
+    event.preventDefault();
+  }
 
-  const tipo = document.getElementById('tipo').value;
-  const descricao = document.getElementById('descricao').value.trim();
-  const valor = parseFloat(document.getElementById('valor').value) || 0;
-  const categoria = document.getElementById('categoria').value;
-  const data = document.getElementById('dataLancamento').value;
+  try {
+    const elTipo = document.getElementById('tipoLancamento');
+    const elDescricao = document.getElementById('descricaoLancamento');
+    const elValor = document.getElementById('valorLancamento');
+    const elCategoria = document.getElementById('categoriaLancamento');
+    const elData = document.getElementById('dataLancamento');
 
-  const item = {
-    id: Date.now(),
-    tipo,
-    descricao,
-    valor,
-    categoria,
-    data_lancamento: data, // Enviando com o nome exato da coluna do banco
-    data // Mantendo caso o banco também tenha a coluna data
-  };
+    if (!elDescricao || !elValor) {
+      alert("Erro no formulário: Campos de descrição ou valor não foram encontrados.");
+      return;
+    }
+
+    const tipo = elTipo ? elTipo.value : 'Entrada';
+    const descricao = elDescricao.value.trim();
+    
+    // Converte o valor numérico (suporta formato com vírgula ou ponto)
+    const valorLimpo = elValor.value.replace('R$', '').replace(/\./g, '').replace(',', '.').trim();
+    const valor = parseFloat(valorLimpo);
+    const categoria = elCategoria ? elCategoria.value : 'Geral';
+    const dataLancamento = elData && elData.value ? elData.value : new Date().toISOString().split('T')[0];
+
+    if (!descricao || isNaN(valor) || valor <= 0) {
+      alert("Por favor, preencha uma descrição válida e um valor maior que zero.");
+      return;
+    }
+
+    const dadosLancamento = {
+      tipo,
+      descricao,
+      valor,
+      categoria,
+      data_lancamento: dataLancamento
+    };
+
+    let error;
+
+    if (lancamentoEmEdicaoId) {
+      const res = await supabaseClient
+        .from('financeiro')
+        .update(dadosLancamento)
+        .eq('id', lancamentoEmEdicaoId);
+      error = res.error;
+    } else {
+      const res = await supabaseClient
+        .from('financeiro')
+        .insert([dadosLancamento]);
+      error = res.error;
+    }
+
+    if (error) {
+      alert("Erro ao salvar no Supabase: " + error.message);
+      return;
+    }
+
+    alert(lancamentoEmEdicaoId ? "Lançamento atualizado com sucesso!" : "Lançamento registrado com sucesso!");
+    
+    limparFormularioFinanceiro();
+    await carregarHistoricoFinanceiro();
+
+  } catch (err) {
+    console.error("Erro ao salvar lançamento:", err);
+    alert("Erro interno ao salvar: " + err.message);
+  }
+
 
   // Envia para a nuvem
   const { error } = await supabaseClient.from('financeiro').insert([item]);

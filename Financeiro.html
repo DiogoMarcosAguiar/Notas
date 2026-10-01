@@ -27,7 +27,7 @@
       <a href="index.html">
         <span class="icon">📜</span> Gerador de Notas
       </a>
-      <a href="financeiro.html" class="active">
+      <a href="Financeiro.html" class="active">
         <span class="icon">📊</span> Faturamento & Caixa
       </a>
     </nav>
@@ -47,32 +47,40 @@
       <p>Painel Estratégico de Faturamento, Custos e Lucro Líquido</p>
     </header>
 
-    <!-- Cards do Dashboard Executivo -->
-    <section class="dashboard-cards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px;">
-      <div class="card-stat entrada card-luxo" style="border-left: 4px solid #28a745;">
-        <div class="card-header-icon" style="display: flex; justify-content: space-between; align-items: center;">
-          <h3 style="margin: 0; font-size: 1rem;">Faturamento Bruto</h3>
-          <span class="badge badge-green" style="background: #28a745; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;">Entradas</span>
-        </div>
-        <p class="valor" id="totalEntradas" style="font-size: 1.6rem; color: #28a745; font-weight: bold; margin: 10px 0 0 0;">R$ 0,00</p>
-      </div>
+ <!-- CARDS DE RESUMO FINANCEIRO -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px;">
+  
+  <!-- Card 1: Faturamento Bruto (Entradas) -->
+  <div style="background: #181818; border: 1px solid #28a745; border-radius: 8px; padding: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+    <span style="display: block; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #aaa; margin-bottom: 6px;">
+      Faturamento Bruto (Entradas)
+    </span>
+    <span id="cardTotalEntradas" style="display: block; font-size: 1.5rem; font-weight: bold; color: #28a745;">
+      R$ 0,00
+    </span>
+  </div>
 
-      <div class="card-stat saida card-luxo" style="border-left: 4px solid #dc3545;">
-        <div class="card-header-icon" style="display: flex; justify-content: space-between; align-items: center;">
-          <h3 style="margin: 0; font-size: 1rem;">Custos & Despesas</h3>
-          <span class="badge badge-red" style="background: #dc3545; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;">Saídas</span>
-        </div>
-        <p class="valor" id="totalSaidas" style="font-size: 1.6rem; color: #dc3545; font-weight: bold; margin: 10px 0 0 0;">R$ 0,00</p>
-      </div>
+  <!-- Card 2: Custos e Despesas (Saídas) -->
+  <div style="background: #181818; border: 1px solid #ff4d4d; border-radius: 8px; padding: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+    <span style="display: block; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #aaa; margin-bottom: 6px;">
+      Custos e Despesas
+    </span>
+    <span id="cardTotalSaidas" style="display: block; font-size: 1.5rem; font-weight: bold; color: #ff4d4d;">
+      R$ 0,00
+    </span>
+  </div>
 
-      <div class="card-stat lucro card-luxo" style="border-left: 4px solid #d4af37;">
-        <div class="card-header-icon" style="display: flex; justify-content: space-between; align-items: center;">
-          <h3 style="margin: 0; font-size: 1rem;">Lucro Líquido Real</h3>
-          <span class="badge badge-gold" style="background: #d4af37; color: #000; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold;">Resultado</span>
-        </div>
-        <p class="valor" id="totalLucro" style="font-size: 1.6rem; color: #d4af37; font-weight: bold; margin: 10px 0 0 0;">R$ 0,00</p>
-      </div>
-    </section>
+  <!-- Card 3: Lucro Líquido Real -->
+  <div style="background: #181818; border: 1px solid #d4af37; border-radius: 8px; padding: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+    <span style="display: block; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #d4af37; margin-bottom: 6px;">
+      Lucro Líquido Real
+    </span>
+    <span id="cardTotalSaldo" style="display: block; font-size: 1.5rem; font-weight: bold; color: #d4af37;">
+      R$ 0,00
+    </span>
+  </div>
+
+</div>
 
     <!-- Formulário de Lançamento -->
     <section class="card-luxo">
@@ -80,33 +88,34 @@
         <h2>💸 Lançamento de Movimentação</h2>
       </div>
       <form id="formLancamento" onsubmit="salvarLancamento(event)">
-        <div class="form-grid">
+        <div class="form-linha">
           <div class="form-group">
             <label for="tipo">Tipo de Operação:</label>
-            <select id="tipo" style="background: #222; color: #fff; padding: 10px; border-radius: 6px; border: 1px solid #444;" required>
-              <option value="ENTRADA">🟢 Entrada (Venda / Recebimento)</option>
-              <option value="SAIDA">🔴 Saída (Insumo / Custo / Despesa)</option>
+            <select id="tipoLancamento" style="background: #222; color: #fff; padding: 10px; border-radius: 6px; border: 1px solid #444;" required>
+              <option value="ENTRADA">🟢 Entrada 🟢 </option>
+              <option value="SAIDA">🔴 Saída 🔴 </option>
             </select>
           </div>
 
           <div class="form-group">
             <label for="descricao">Descrição:</label>
-            <input type="text" id="descricao" placeholder="Ex: Tronqueira T002 / Compra Arame MIG" required>
+            <input type="text" id="descricaoLancamento" placeholder="Ex: VENDA DE PRODUTOS / COMPRA INSUMOS / REPOSIÇÃO DE FERRO" required>
           </div>
 
           <div class="form-group">
             <label for="valor">Valor Total (R$):</label>
-            <input type="number" id="valor" step="0.01" placeholder="0,00" required>
+            <input type="number" id="valorLancamento" step="0.01" placeholder="0,00" required>
           </div>
 
           <div class="form-group">
             <label for="categoria">Categoria:</label>
-            <select id="categoria" style="background: #222; color: #fff; padding: 10px; border-radius: 6px; border: 1px solid #444;" required>
+            <select id="categoriaLancamento" style="background: #222; color: #fff; padding: 10px; border-radius: 6px; border: 1px solid #444;" required>
               <option value="Venda Produtos">Venda de Produtos</option>
-              <option value="Insumos">Insumos (Aço, Arame, Gás, Discos)</option>
-              <option value="Ferramental">Ferramentas & Equipamentos</option>
-              <option value="Despesa Fixa">Despesas Fixas (Luz, Internet)</option>
-              <option value="Outros">Outros Investimentos</option>
+              <option value="Insumos">Insumos (Chapa, Ferro, Tinta, Discos)</option>
+              <option value="Ferramentas">Ferramentas & Equipamentos</option>
+              <option value="Serviços / Frete">Serviços / Frete</option>
+              <option value="Despesa Fixa">Despesas Fixas (Água, Luz, Internet)</option>
+              <option value="Outros">Outros</option>
             </select>
           </div>
 
@@ -116,7 +125,7 @@
           </div>
         </div>
 
-        <button type="submit" class="btn-gold-submit" style="margin-top: 15px;">💾 Registrar Operação</button>
+        <button type="button" class="btn-gold-submit" style="margin-top: 15px;" id="btnSalvarLancamento" onclick="salvarLancamento()" style="width: 100%; margin-top: 15px; padding: 12px; background: #d4af37; color: #000; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">💾 Registrar Operação</button>
       </form>
     </section>
 
@@ -126,21 +135,23 @@
         <h2>📊 Histórico de Entradas & Saídas</h2>
       </div>
       <div class="tabela-wrapper">
-        <table class="tabela-itens" style="width: 100%;">
-          <thead>
-            <tr>
-              <th>Data</th>
-              <th>Fluxo</th>
-              <th>Descrição</th>
-              <th>Categoria</th>
-              <th>Valor (R$)</th>
-              <th class="coluna-acao">Ações</th>
-            </tr>
-          </thead>
-          <tbody id="tabelaHistorico">
-            <!-- Dados carregados via JS -->
-          </tbody>
-        </table>
+        <table style="width: 100%; border-collapse: collapse; text-align: left; margin-top: 15px;">
+  <thead>
+    <tr style="border-bottom: 2px solid #d4af37; color: #d4af37;">
+      <th style="padding: 10px; text-align: center; width: 10%;">Nº</th>
+      <th style="padding: 10px; text-align: center; width: 15%;">Data</th>
+      <th style="padding: 10px; text-align: left; width: 35%;">Descrição</th>
+      <th style="padding: 10px; text-align: center; width: 15%;">Categoria</th>
+      <th style="padding: 10px; text-align: right; width: 15%;">Valor</th>
+      <th style="padding: 10px; text-align: center; width: 10%;">Ações</th>
+    </tr>
+  </thead>
+  <tbody id="listaHistoricoFinanceiro">
+    <!-- As entradas e saídas serão inseridas dinamicamente aqui -->
+  </tbody>
+</table>
+
+
       </div>
     </section>
 
@@ -163,6 +174,15 @@
 
   </main>
 
-  <script src="financeiro.js"></script>
+  <!-- Bibliotecas externas (html2canvas, jsPDF, Supabase) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="financeiro-db.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="nota-items.js"></script>
+  <script src="exportar-nota.js"></script>
+  <script src="storage.js"></script>
+  <script src="Financeiro.js"></script>
 </body>
 </html>

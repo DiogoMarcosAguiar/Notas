@@ -15,7 +15,7 @@
 </head>
 <body>
 
-  <!-- Botão Hambúrguer Fixo no Canto Superior Esquerdo -->
+ <!-- Botão Hambúrguer Fixo no Canto Superior Esquerdo -->
   <button class="btn-hamb" onclick="toggleMenu()" title="Abrir Menu">
     ☰ Menu
   </button>
@@ -27,17 +27,18 @@
       <button class="btn-fechar" onclick="toggleMenu()">✕</button>
     </div>
     <nav class="sidebar-nav">
-      <a href="index.html" class="active">
+      <a href="index.html">
         <span class="icon">📜</span> Gerador de Notas
       </a>
-      <a href="financeiro.html">
+      <a href="Financeiro.html" class="active">
         <span class="icon">📊</span> Faturamento & Caixa
       </a>
     </nav>
     <div class="sidebar-footer">
-      <p>🔒 Acesso Restrito 🔒 - Somente Equipe DMArtFerro</p>
+      <p>🔒 Acesso Restrito 🔒 - Equipe DMArtFerro</p>
     </div>
   </aside>
+
 
   <!-- Overlay para fechar o menu ao clicar fora -->
   <div class="overlay" id="menuOverlay" onclick="toggleMenu()"></div>
