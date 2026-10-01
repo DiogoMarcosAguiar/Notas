@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1790823100921,
+    "tipo": "ENTRADA",
+    "descricao": "Pedido Amada",
+    "valor": 500,
+    "categoria": "Venda Produtos",
+    "data_lancamento": "2026-10-01",
+    "created_at": "2026-10-01T02:51:27.331678+00:00",
+    "data": "2026-10-01"
+  },
+  {
+    "id": 1790823074094,
+    "tipo": "ENTRADA",
+    "descricao": "Peca de Exu (Lays)",
+    "valor": 1500,
+    "categoria": "Venda Produtos",
+    "data_lancamento": "2026-10-01",
+    "created_at": "2026-10-01T02:51:00.498539+00:00",
+    "data": "2026-10-01"
+  },
+  {
+    "id": 1790823053143,
+    "tipo": "SAIDA",
+    "descricao": "Material para Tronqueiras",
+    "valor": 500,
+    "categoria": "Insumos",
+    "data_lancamento": "2026-10-01",
+    "created_at": "2026-10-01T02:50:39.542193+00:00",
+    "data": "2026-10-01"
+  },
+  {
+    "id": 1790823025989,
+    "tipo": "SAIDA",
+    "descricao": "Tinta Spray Roxa / Dourado",
+    "valor": 100,
+    "categoria": "Insumos",
+    "data_lancamento": "2026-10-01",
+    "created_at": "2026-10-01T02:50:12.390459+00:00",
+    "data": "2026-10-01"
+  },
+  {
+    "id": 1790822999640,
+    "tipo": "ENTRADA",
+    "descricao": "Peca de Exu",
+    "valor": 500,
+    "categoria": "Venda Produtos",
+    "data_lancamento": "2026-10-01",
+    "created_at": "2026-10-01T02:49:46.05644+00:00",
+    "data": "2026-10-01"
+  }
+]

@@ -1,161 +1,170 @@
-// Array global para armazenar os itens do pedido atual
-let itensPedido = [];
+// ==========================================
+// VARIÁVEIS GLOBAIS DA APLICAÇÃO
+// ==========================================
+let itensNota = [];
 
-// Função para atualizar os dados do cliente na prévia em tempo real
+// Função auxiliar para dar tempo do DOM renderizar totalmente
+const esperarRenderizacao = (ms = 100) => new Promise(resolve => setTimeout(resolve, ms));
+
+// ==========================================
+// ATUALIZAR PREVIEW DA NOTA (CLIENTE, CONTATO, DATA)
+// ==========================================
 function atualizarPreviewNota() {
-  const numPedido = document.getElementById('numPedido').value || '001';
-  const nomeCliente = document.getElementById('nomeCliente').value || '--';
-  const contatoCliente = document.getElementById('contatoCliente').value || '--';
-  const dataPedido = document.getElementById('dataPedido').value;
+  // 1. Atualiza Nome do Cliente
+  const inputCliente = document.getElementById('clienteNome') 
+                    || document.getElementById('cliente') 
+                    || document.getElementById('nomeCliente');
+  const viewCliente = document.getElementById('viewNomeCliente') 
+                   || document.getElementById('viewCliente');
 
-  document.getElementById('viewNumPedido').innerText = numPedido;
-  document.getElementById('viewNomeCliente').innerText = nomeCliente;
-  document.getElementById('viewContatoCliente').innerText = contatoCliente;
+  if (inputCliente && viewCliente) {
+    viewCliente.innerText = inputCliente.value.trim() || "--";
+  }
 
-  if (dataPedido) {
-    const partes = dataPedido.split('-');
-    document.getElementById('viewDataPedido').innerText = `${partes[2]}/${partes[1]}/${partes[0]}`;
-  } else {
-    document.getElementById('viewDataPedido').innerText = '--/--/----';
+  // 2. Atualiza Contato do Cliente
+  const inputContato = document.getElementById('clienteContato') 
+                    || document.getElementById('contatoCliente') 
+                    || document.getElementById('contato');
+  const viewContato = document.getElementById('viewContatoCliente') 
+                   || document.getElementById('viewContato');
+
+  if (inputContato && viewContato) {
+    viewContato.innerText = inputContato.value.trim() || "--";
+  }
+
+  // 3. Atualiza Data do Pedido
+  const inputData = document.getElementById('dataEmissao') || document.getElementById('dataNota');
+  const viewData = document.getElementById('viewDataPedido') || document.getElementById('viewData');
+
+  if (viewData) {
+    if (inputData && inputData.value) {
+      const partes = inputData.value.split('-');
+      if (partes.length === 3) {
+        viewData.innerText = `${partes[2]}/${partes[1]}/${partes[0]}`;
+      } else {
+        viewData.innerText = inputData.value;
+      }
+    } else {
+      viewData.innerText = new Date().toLocaleDateString('pt-BR');
+    }
   }
 }
 
-// Função acionada ao enviar o formulário de adicionar item
+// ==========================================
+// ADICIONAR E RENDERIZAR ITENS
+// ==========================================
 function adicionarItem(event) {
-  event.preventDefault();
+  if (event) event.preventDefault();
 
-  const codigo = document.getElementById('codigoItem').value.trim();
-  const descricao = document.getElementById('descricaoItem').value.trim();
-  const qtd = parseInt(document.getElementById('qtdItem').value) || 1;
-  const valorUnit = parseFloat(document.getElementById('valorUnitItem').value) || 0;
-  const total = qtd * valorUnit;
+  const elCodigo = document.getElementById('codigoItem');
+  const elDescricao = document.getElementById('descricaoItem');
+  const elQtd = document.getElementById('qtdItem');
+  const elValor = document.getElementById('valorUnitItem');
 
-  // Adiciona ao array
-  itensPedido.push({
-    id: Date.now(), // ID único para controle
+  if (!elCodigo || !elDescricao || !elQtd || !elValor) {
+    alert("Erro: Não foi possível localizar os campos de entrada do item no HTML.");
+    return;
+  }
+
+  const codigo = elCodigo.value.trim();
+  const descricao = elDescricao.value.trim();
+  const quantidade = parseInt(elQtd.value, 10) || 1;
+  const valorUnitario = parseFloat(elValor.value.replace(',', '.')) || 0;
+
+  if (!codigo || !descricao || valorUnitario <= 0) {
+    alert("Preencha o Código, a Descrição e um Valor Unitário maior que zero!");
+    return;
+  }
+
+  const totalItem = quantidade * valorUnitario;
+
+  // Adiciona item ao array global
+
+  itensNota.push({
     codigo,
     descricao,
-    qtd,
-    valorUnit,
-    total
+    quantidade,
+    valorUnitario,
+    totalItem
   });
 
-  // Limpa o formulário de itens
-  document.getElementById('formAdicionarItem').reset();
-  document.getElementById('qtdItem').value = 1;
+  // Atualiza a tabela na prévia
+  renderizarTabelaItens();
 
-  // Atualiza a visualização da tabela
-  renderizarTabela();
+  // ATUALIZA CLIENTE/CONTATO NA PRÉVIA
+  atualizarPreviewNota();
+
+  // Limpa os campos do formulário de itens
+  elCodigo.value = '';
+  elDescricao.value = '';
+  elQtd.value = '1';
+  elValor.value = '';
 }
 
-// Função para renderizar a tabela na prévia com botões de Ação
-function renderizarTabela() {
+function renderizarTabelaItens() {
   const corpoTabela = document.getElementById('corpoTabelaNota');
+  if (!corpoTabela) return;
+
   corpoTabela.innerHTML = '';
+  let valorTotalNota = 0;
 
-  let totalGeral = 0;
-  let totalQtd = 0;
+  itensNota.forEach((item, index) => {
+    valorTotalNota += item.totalItem;
 
-  if (itensPedido.length === 0) {
-    corpoTabela.innerHTML = `
-      <tr>
-        <td colspan="6" style="text-align: center; color: #888; padding: 10px;">Nenhum item adicionado ainda.</td>
-      </tr>
+    const tr = document.createElement('tr');
+    tr.style.borderBottom = '1px solid #333';
+
+    tr.innerHTML = `
+      <td style="padding: 6px;">${item.codigo}</td>
+      <td style="padding: 6px;">${item.descricao}</td>
+      <td style="padding: 6px; text-align: center;">${item.quantidade}</td>
+      <td style="padding: 6px;">R$ ${item.valorUnitario.toFixed(2).replace('.', ',')}</td>
+      <td style="padding: 6px;">R$ ${item.totalItem.toFixed(2).replace('.', ',')}</td>
+      <td class="coluna-acao" style="padding: 6px; text-align: center;">
+        <button type="button" onclick="removerItem(${index})" style="background: transparent; color: #ff4d4d; border: none; cursor: pointer; font-size: 14px;">❌</button>
+      </td>
     `;
-  } else {
-    itensPedido.forEach((item, index) => {
-      totalGeral += item.total;
-      totalQtd += item.qtd;
 
-      const tr = document.createElement('tr');
-      tr.style.borderBottom = '1px solid #333';
-      tr.innerHTML = `
-        <td style="padding: 8px 4px;">${item.codigo}</td>
-        <td style="padding: 8px 4px;">${item.descricao}</td>
-        <td style="padding: 8px 4px; text-align: center;">${item.qtd}</td>
-        <td style="padding: 8px 4px;">R$ ${item.valorUnit.toFixed(2)}</td>
-        <td style="padding: 8px 4px;">R$ ${item.total.toFixed(2)}</td>
-        <td class="coluna-acao" style="padding: 8px 4px; text-align: center;">
-          <button onclick="editarItem(${item.id})" style="background: none; border: none; cursor: pointer; font-size: 1rem;" title="Editar">✏️</button>
-          <button onclick="removerItem(${item.id})" style="background: none; border: none; cursor: pointer; font-size: 1rem;" title="Remover">🗑️</button>
-        </td>
-      `;
-      corpoTabela.appendChild(tr);
-    });
-  }
-
-  // Atualiza os totais na notinha
-  document.getElementById('totalQtdItens').innerText = totalQtd;
-  document.getElementById('lblTotalNota').innerText = `R$ ${totalGeral.toFixed(2)}`;
-}
-
-// Função para remover item
-function removerItem(id) {
-  itensPedido = itensPedido.filter(item => item.id !== id);
-  renderizarTabela();
-}
-
-// Função para editar item (recarrega os dados no form para alteração)
-function editarItem(id) {
-  const item = itensPedido.find(i => i.id === id);
-  if (item) {
-    document.getElementById('codigoItem').value = item.codigo;
-    document.getElementById('descricaoItem').value = item.descricao;
-    document.getElementById('qtdItem').value = item.qtd;
-    document.getElementById('valorUnitItem').value = item.valorUnit;
-
-    // Remove o item atual para re-adicionar editado
-    removerItem(id);
-  }
-}
-
-// Função para capturar a notinha como Imagem (escondendo os botões de ação)
-function gerarEBaixarImagemNota() {
-  const elementoNota = document.getElementById('nota-preview');
-  const colunasAcao = document.querySelectorAll('.coluna-acao');
-
-  // Esconde temporariamente a coluna de ações para não sair no print
-  colunasAcao.forEach(col => col.style.display = 'none');
-
-  html2canvas(elementoNota, {
-    backgroundColor: '#1a1a1a',
-    scale: 2, // Melhora a resolução da imagem baixada
-    useCORS: true, // Permite carregar imagens do QR Code / Logo sem bloquear
-    allowTaint: true, // Permite captura de imagens do mesmo diretório
-    logging: false
-  }).then(canvas => {
-    // Restaura a visibilidade dos botões de ação
-    colunasAcao.forEach(col => col.style.display = '');
-
-    const link = document.createElement('a');
-    const numPedido = document.getElementById('numPedido').value || '001';
-    const nomeCliente = document.getElementById('nomeCliente').value || 'Cliente';
-    
-    link.download = `Nota_DMArtFerro_Pedido_${numPedido}_${nomeCliente}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-  }).catch(err => {
-    colunasAcao.forEach(col => col.style.display = '');
-    console.error('Erro ao gerar imagem da nota:', err);
-    alert('Ocorreu um erro ao gerar a imagem da notinha.');
+    corpoTabela.appendChild(tr);
   });
+
+  const viewTotal = document.getElementById('viewValorTotal');
+  if (viewTotal) {
+    viewTotal.innerText = `R$ ${valorTotalNota.toFixed(2).replace('.', ',')}`;
+  }
 }
 
-// Menu Hambúrguer
-function toggleMenu() {
-  const menu = document.getElementById('sidebarMenu');
-  const overlay = document.getElementById('menuOverlay');
-  menu.classList.toggle('open');
-  overlay.classList.toggle('open');
+function removerItem(index) {
+  itensNota.splice(index, 1);
+  renderizarTabelaItens();
 }
 
-// Inicializa a tabela e define a data de hoje como padrão
+// Configuração inicial ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
-  const inputData = document.getElementById('dataPedido');
+  const inputData = document.getElementById('dataEmissao') || document.getElementById('dataNota');
   if (inputData) {
-    const hoje = new Date().toISOString().split('T')[0];
-    inputData.value = hoje;
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+    const dia = String(hoje.getDate()).padStart(2, '0');
+    inputData.value = `${ano}-${mes}-${dia}`;
   }
   atualizarPreviewNota();
-  renderizarTabela();
+});
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Sincroniza campos de entrada com a prévia
+  const inputsParaSincronizar = ['clienteNome', 'cliente', 'nomeCliente', 'clienteContato', 'contatoCliente', 'contato', 'dataEmissao', 'dataNota'];
+
+  inputsParaSincronizar.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', atualizarPreviewNota);
+      el.addEventListener('change', atualizarPreviewNota);
+    }
+  });
+
+  // Atualização inicial
+  atualizarPreviewNota();
 });

@@ -231,3 +231,21 @@ async function restaurarBackup(event) {
   };
   reader.readAsText(file);
 }
+
+// ABRIR / FECHAR MENU LATERAL
+function toggleMenu() {
+  const menu = document.getElementById('sidebarMenu');
+  const overlay = document.getElementById('menuOverlay');
+
+  if (menu) menu.classList.toggle('open');
+  if (overlay) overlay.classList.toggle('open');
+}
+
+// FECHAR MENU AO CLICAR NO OVERLAY
+function fecharMenu() {
+  const menu = document.getElementById('sidebarMenu');
+  const overlay = document.getElementById('menuOverlay');
+
+  if (menu) menu.classList.remove('open');
+  if (overlay) overlay.classList.remove('open');
+}

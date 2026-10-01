@@ -481,3 +481,111 @@ input:focus, select:focus {
 .card-faturamento h3 { color: #4caf50 !important; }
 .card-custos h3 { color: #f44336 !important; }
 .card-lucro h3 { color: #d4af37 !important; }
+
+/* Container padronizado para os cards (Mesma largura para todos) */
+.card-painel {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto 20px auto;
+  background-color: #121212;
+  border: 1px solid #d4af37; /* Borda dourada */
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  box-sizing: border-box;
+}
+
+/* Painel de Botões Empilhados */
+.painel-acoes {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto 25px auto;
+  display: flex;
+  flex-direction: column; /* Coloca um botão em cima do outro */
+  gap: 12px;
+}
+
+/* Estilo base dos Botões */
+.btn-acao {
+  width: 100%;
+  padding: 14px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid #d4af37;
+}
+
+/* Botão Salvar (Fundo Dourado) */
+.btn-salvar {
+  background: linear-gradient(135deg, #d4af37, #aa820a);
+  color: #000;
+}
+
+.btn-salvar:hover {
+  background: linear-gradient(135deg, #f3e5ab, #d4af37);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+/* Botão PNG (Escuro com borda dourada) */
+.btn-png {
+  background: #1e1e1e;
+  color: #d4af37;
+}
+
+.btn-pdf {
+  background: #d4af37;
+  color: #000;
+}
+
+.btn-png:hover {
+  background: #2a2a2a;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* Histórico e Tabela */
+.historico-secao {
+  margin-top: 10px;
+}
+
+.titulo-secao {
+  color: #d4af37;
+  font-size: 1.25rem;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #333;
+  padding-bottom: 8px;
+}
+
+.tabela-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.tabela-custom {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  color: #e0e0e0;
+}
+
+.tabela-custom th {
+  background-color: #1a1a1a;
+  color: #d4af37;
+  padding: 12px;
+  border-bottom: 2px solid #d4af37;
+  font-weight: 600;
+}
+
+.tabela-custom td {
+  padding: 12px;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.tabela-custom tr:hover {
+  background-color: #1a1a1a;
+}
