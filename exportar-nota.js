@@ -9,6 +9,12 @@ async function baixarNotaPNG() {
     return;
   }
 
+  // 1. Seleciona o título da coluna de Ação (th) e todas as células com os botões X (td)
+  const elementosAcao = container.querySelectorAll('th:nth-child(6), td:nth-child(6), .coluna-acao, .btn-remover');
+
+  // 2. Oculta temporariamente a coluna inteira de ações
+  elementosAcao.forEach(el => el.style.display = 'none');
+
   try {
     if (typeof atualizarPreviewNota === 'function') atualizarPreviewNota();
     await new Promise(r => setTimeout(r, 150));
@@ -31,6 +37,9 @@ async function baixarNotaPNG() {
 
   } catch (err) {
     alert("Erro ao gerar PNG: " + err.message);
+  } finally {
+    // 3. Restaura os botões X no seu painel para você continuar usando
+    elementosAcao.forEach(el => el.style.display = '');
   }
 }
 
@@ -81,5 +90,27 @@ async function baixarNotaPDF() {
 
   } catch (err) {
     alert("Erro ao gerar PDF: " + err.message);
+  }
+}
+
+async function exportarNota() {
+  const elementoNota = document.getElementById('areaNota'); // ID da área da nota
+  
+  // 1. Esconde a coluna/botões de ação antes de capturar
+  const elementosParaEsconder = elementoNota.querySelectorAll('.coluna-acoes, button, .btn-fechar');
+  elementosParaEsconder.forEach(el => el.style.visibility = 'hidden');
+
+  try {
+    // 2. Captura a imagem/PDF sem os botões
+    const canvas = await html2canvas(elementoNota, { scale: 2 });
+    const imgData = canvas.toDataURL('image/png');
+
+    // ... lógica do jsPDF ou download da imagem ...
+    
+  } catch (erro) {
+    console.error("Erro ao exportar nota:", erro);
+  } finally {
+    // 3. Reexibe os botões na tela do sistema
+    elementosParaEsconder.forEach(el => el.style.visibility = 'visible');
   }
 }

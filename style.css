@@ -267,22 +267,22 @@ input:focus, select:focus {
 .nota-header {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: left;
   justify-content: center;
-  text-align: center;
   gap: 10px;
   margin-bottom: 15px;
 }
 
 /* Arredondamento do Logotipo na Notinha */
 .nota-header img.logo-circulo {
-  width: 90px;                  /* Largura fixa para manter o círculo perfeito */
-  height: 90px;                 /* Altura igual à largura */
-  border-radius: 50%;           /* Faz a imagem ficar 100% circular */
-  object-fit: cover;            /* Evita que a imagem fique esticada ou deformada */
-  border: 2px solid #d4af37;    /* Borda fininha dourada em volta do círculo */
-  display: block;
-  margin: 0 auto;
+  width: 200px !important;       /* Altere para 80px, 100px ou 120px conforme o gosto */
+  height: 200px !important;      /* Mantenha igual ao width para ser um círculo perfeito */
+  max-width: none !important;
+  max-height: none !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  border: 2px solid #d4af37 !important;
+  display: inline-block !important;
 }
 
 .nota-header h2 {
@@ -588,4 +588,16 @@ input:focus, select:focus {
 
 .tabela-custom tr:hover {
   background-color: #1a1a1a;
+}
+
+/* Oculta botões de ação e colunas de edição ao imprimir */
+@media print {
+  .btn-fechar,
+  .btn-hamb,
+  th:last-child, /* Oculta o cabeçalho 'Ações' */
+  td:last-child, /* Oculta as células das ações */
+  .coluna-acoes,
+  button {
+    display: none !important;
+  }
 }
