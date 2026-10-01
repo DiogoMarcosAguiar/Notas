@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DMArtFerro - Gestão Executiva & Financeira</title>
+  <title>DMArtFerro - Gestão Financeira</title>
   <link rel="icon" href="LOGO1.jpeg" type="image/png">
   <link rel="icon" href="LOGO1.jpeg" sizes="32x32">
+  <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="style-financeiro.css">
-   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -24,7 +24,7 @@
       <button class="btn-fechar" onclick="toggleMenu()">✕</button>
     </div>
     <nav class="sidebar-nav">
-      <a href="index.html" class="active">
+      <a href="index.html">
         <span class="icon">📜</span> Gerador de Notas
       </a>
       <a href="financeiro.html" class="active">
@@ -32,69 +32,66 @@
       </a>
     </nav>
     <div class="sidebar-footer">
-      <p>🔒 Acesso Restrito - Equipe DMArtFerro</p>
+      <p>🔒 Acesso Restrito 🔒 - Equipe DMArtFerro</p>
     </div>
   </aside>
 
   <!-- Overlay para fechar o menu ao clicar fora -->
   <div class="overlay" id="menuOverlay" onclick="toggleMenu()"></div>
 
-
-     <!-- Conteúdo Principal -->
+  <!-- Conteúdo Principal -->
   <main class="container">
     <header class="header-financeiro">
-       
       <div class="tag-startup">CONTROLE FINANCEIRO</div>
-    
-       <h1>DMArtFerro <span class="sub-title">| Gestão Financeira</span></h1>
+      <h1>DMArtFerro <span class="sub-title">| Gestão Financeira</span></h1>
       <p>Painel Estratégico de Faturamento, Custos e Lucro Líquido</p>
     </header>
 
     <!-- Cards do Dashboard Executivo -->
-    <section class="dashboard-cards">
-      <div class="card-stat entrada">
-        <div class="card-header-icon">
-          <h3>Faturamento Bruto</h3>
-          <span class="badge badge-green">Entradas</span>
+    <section class="dashboard-cards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px;">
+      <div class="card-stat entrada card-luxo" style="border-left: 4px solid #28a745;">
+        <div class="card-header-icon" style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="margin: 0; font-size: 1rem;">Faturamento Bruto</h3>
+          <span class="badge badge-green" style="background: #28a745; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;">Entradas</span>
         </div>
-        <p class="valor" id="totalEntradas">R$ 0,00</p>
+        <p class="valor" id="totalEntradas" style="font-size: 1.6rem; color: #28a745; font-weight: bold; margin: 10px 0 0 0;">R$ 0,00</p>
       </div>
 
-      <div class="card-stat saida">
-        <div class="card-header-icon">
-          <h3>Custos & Despesas</h3>
-          <span class="badge badge-red">Saídas</span>
+      <div class="card-stat saida card-luxo" style="border-left: 4px solid #dc3545;">
+        <div class="card-header-icon" style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="margin: 0; font-size: 1rem;">Custos & Despesas</h3>
+          <span class="badge badge-red" style="background: #dc3545; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;">Saídas</span>
         </div>
-        <p class="valor" id="totalSaidas">R$ 0,00</p>
+        <p class="valor" id="totalSaidas" style="font-size: 1.6rem; color: #dc3545; font-weight: bold; margin: 10px 0 0 0;">R$ 0,00</p>
       </div>
 
-      <div class="card-stat lucro">
-        <div class="card-header-icon">
-          <h3>Lucro Líquido Real</h3>
-          <span class="badge badge-gold">Resultado</span>
+      <div class="card-stat lucro card-luxo" style="border-left: 4px solid #d4af37;">
+        <div class="card-header-icon" style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="margin: 0; font-size: 1rem;">Lucro Líquido Real</h3>
+          <span class="badge badge-gold" style="background: #d4af37; color: #000; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold;">Resultado</span>
         </div>
-        <p class="valor" id="totalLucro">R$ 0,00</p>
+        <p class="valor" id="totalLucro" style="font-size: 1.6rem; color: #d4af37; font-weight: bold; margin: 10px 0 0 0;">R$ 0,00</p>
       </div>
     </section>
 
-    <!-- Formulário Premium de Lançamento -->
+    <!-- Formulário de Lançamento -->
     <section class="card-luxo">
       <div class="card-titulo">
-        <h2>+ Lançamento de Movimentação</h2>
+        <h2>💸 Lançamento de Movimentação</h2>
       </div>
       <form id="formLancamento" onsubmit="salvarLancamento(event)">
         <div class="form-grid">
           <div class="form-group">
             <label for="tipo">Tipo de Operação:</label>
-            <select id="tipo" required>
-              <option value="ENTRADA">🟢 Entrada 🟢 </option>
-              <option value="SAIDA">🔴 Saída 🔴 </option>
+            <select id="tipo" style="background: #222; color: #fff; padding: 10px; border-radius: 6px; border: 1px solid #444;" required>
+              <option value="ENTRADA">🟢 Entrada (Venda / Recebimento)</option>
+              <option value="SAIDA">🔴 Saída (Insumo / Custo / Despesa)</option>
             </select>
           </div>
 
           <div class="form-group">
             <label for="descricao">Descrição:</label>
-            <input type="text" id="descricao" placeholder="Produto" required>
+            <input type="text" id="descricao" placeholder="Ex: Tronqueira T002 / Compra Arame MIG" required>
           </div>
 
           <div class="form-group">
@@ -104,11 +101,11 @@
 
           <div class="form-group">
             <label for="categoria">Categoria:</label>
-            <select id="categoria" required>
-              <option value="Venda Peça">Venda de Produtos</option>
-              <option value="Insumos">Insumos</option>
-              <option value="Ferramental">Ferramenta</option>
-              <option value="Despesa Fixa">Outras despesas(Luz)</option>
+            <select id="categoria" style="background: #222; color: #fff; padding: 10px; border-radius: 6px; border: 1px solid #444;" required>
+              <option value="Venda Produtos">Venda de Produtos</option>
+              <option value="Insumos">Insumos (Aço, Arame, Gás, Discos)</option>
+              <option value="Ferramental">Ferramentas & Equipamentos</option>
+              <option value="Despesa Fixa">Despesas Fixas (Luz, Internet)</option>
               <option value="Outros">Outros Investimentos</option>
             </select>
           </div>
@@ -119,17 +116,17 @@
           </div>
         </div>
 
-        <button type="submit" class="btn-gold-submit">Registrar Operação</button>
+        <button type="submit" class="btn-gold-submit" style="margin-top: 15px;">💾 Registrar Operação</button>
       </form>
     </section>
 
-    <!-- Tabela Estilizada de Histórico -->
-    <section class="card-luxo">
+    <!-- Tabela do Histórico de Movimentações -->
+    <section class="card-luxo" style="margin-top: 25px;">
       <div class="card-titulo">
-        <h2>Histórico</h2>
+        <h2>📊 Histórico de Entradas & Saídas</h2>
       </div>
       <div class="tabela-wrapper">
-        <table class="tabela-luxo">
+        <table class="tabela-itens" style="width: 100%;">
           <thead>
             <tr>
               <th>Data</th>
@@ -137,7 +134,7 @@
               <th>Descrição</th>
               <th>Categoria</th>
               <th>Valor (R$)</th>
-              <th>Ação</th>
+              <th class="coluna-acao">Ações</th>
             </tr>
           </thead>
           <tbody id="tabelaHistorico">
@@ -147,82 +144,25 @@
       </div>
     </section>
 
-    <!-- Cards de Resumo Financeiro (Visível na Tela) -->
-<section class="dashboard-cards">
-  <div class="card-stat card-faturamento">
-    <div class="card-icon">💰</div>
-    <div class="card-info">
-      <p class="card-rotulo">Faturamento Total</p>
-      <h3 id="txtFaturamento">R$ 0,00</h3>
-    </div>
-  </div>
-
-  <div class="card-stat card-custos">
-    <div class="card-icon">💸</div>
-    <div class="card-info">
-      <p class="card-rotulo">Custos & Despesas</p>
-      <h3 id="txtCustos">R$ 0,00</h3>
-    </div>
-  </div>
-
-  <div class="card-stat card-lucro">
-    <div class="card-icon">📈</div>
-    <div class="card-info">
-      <p class="card-rotulo">Lucro Líquido Real</p>
-      <h3 id="txtLucro">R$ 0,00</h3>
-    </div>
-  </div>
-</section>
-
-<!-- Tabela de Lançamentos Visíveis -->
-<section class="card-luxo">
-  <div class="card-titulo">
-    <h2>📊 Histórico de Entradas & Saídas</h2>
-  </div>
-  <div class="tabela-wrapper">
-    <table class="tabela-itens">
-      <thead>
-        <tr>
-          <th>Data</th>
-          <th>Descrição</th>
-          <th>Tipo</th>
-          <th>Valor (R$)</th>
-          <th>Ação</th>
-        </tr>
-      </thead>
-      <tbody id="corpoTabelaFinanceiro">
-        <!-- Linhas dos lançamentos entram automaticamente via JS -->
-      </tbody>
-    </table>
-  </div>
-</section>
-
-
-    <!-- Card de Gerenciamento de Dados & Backup -->
-<section class="card-luxo">
+    <!-- Gestão de Dados & Backup -->
+<section class="card-luxo" style="margin-top: 25px;">
   <div class="card-titulo">
     <h2>💾 Gestão de Dados & Segurança</h2>
   </div>
   <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-    <button class="btn-gold-submit" style="flex: 1; min-width: 200px;" onclick="exportarBackup()">
+    <button class="btn-gold-submit btn-backup" style="flex: 1; min-width: 200px;" onclick="baixarBackup()">
       📥 Baixar Backup dos Dados (.JSON)
     </button>
-    <label class="btn-gold-submit" style="flex: 1; min-width: 200px; text-align: center; cursor: pointer; background: #2a2a2a; color: #d4af37; border: 1px solid #d4af37;">
+    
+    <input type="file" id="inputFileBackup" accept=".json" onchange="restaurarBackup(event)" style="display: none;">
+    <button class="btn-gold-submit btn-restore" style="flex: 1; min-width: 200px;" onclick="document.getElementById('inputFileBackup').click()">
       📤 Restaurar Backup
-      <input type="file" id="inputBackup" accept=".json" onchange="importarBackup(event)" style="display: none;">
-    </label>
+    </button>
   </div>
 </section>
-
-
 
   </main>
 
   <script src="financeiro.js"></script>
-  <!-- Inclua a biblioteca do html2canvas e os scripts no final do body -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="storage.js"></script>
-  <script src="script.js"></script>
-</body>
 </body>
 </html>

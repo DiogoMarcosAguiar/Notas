@@ -1,216 +1,233 @@
-// ======================================================
-// CONEXÃO COM O SUPABASE - DMArtFerro
-// ======================================================
-const SUPABASE_URL = "sb_publishable_fckaKNrimsB5t8bz1p1WPA_oIU-F48r"; 
-const SUPABASE_KEY = "sb_secret_W9CU4kOddULjlpeMUBFayQ_aPqYRyC6"; 
+// CONFIGURAÇÃO DO SUPABASE
+// Substitua com os seus dados reais entre as aspas:
+const SUPABASE_URL = "https://hhlfilsjtkmvhuaivezc.supabase.co";
+const SUPABASE_KEY = "sb_publishable_fckaKNrimsB5t8bz1p1WPA_oIU-F48r";
 
-// Inicializa o cliente Supabase
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// Conexão com o Supabase
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Executa ao carregar a página
-document.addEventListener("DOMContentLoaded", () => {
-  // Preenche o campo de data com o dia atual por padrão
-  document.getElementById("dataLancamento").value = new Date().toISOString().split("T")[0];
-  
-  // Carrega os dados do banco de dados
-  carregarLancamentos();
-});
+let lancamentos = [];
 
-// ======================================================
-// BUSCAR E CARREGAR DADOS DO BANCO
-// ======================================================
-async function carregarLancamentos() {
-  const tabelaCorpo = document.getElementById("tabelaHistorico");
-  tabelaCorpo.innerHTML = "<tr><td colspan='6' style='text-align:center;'>Carregando movimentações...</td></tr>";
-
-  // Busca todos os lançamentos ordenados do mais recente para o mais antigo
-  const { data: lancamentos, error } = await supabaseClient
-    .from("financeiro")
-    .select("*")
-    .order("data_lancamento", { ascending: false })
-    .order("id", { ascending: false });
-
-  if (error) {
-    console.error("Erro ao buscar dados:", error);
-    tabelaCorpo.innerHTML = "<tr><td colspan='6' style='text-align:center; color: #dc3545;'>Erro ao carregar dados do banco.</td></tr>";
-    return;
-  }
-
-  renderizarTabelaEDashboard(lancamentos);
-}
-
-// ======================================================
-// SALVAR NOVO LANÇAMENTO
-// ======================================================
+// Salva um novo lançamento no Supabase
 async function salvarLancamento(event) {
   event.preventDefault();
 
-  const tipo = document.getElementById("tipo").value;
-  const descricao = document.getElementById("descricao").value.trim();
-  const valor = parseFloat(document.getElementById("valor").value);
-  const categoria = document.getElementById("categoria").value;
-  const dataLancamento = document.getElementById("dataLancamento").value;
+  const tipo = document.getElementById('tipo').value;
+  const descricao = document.getElementById('descricao').value.trim();
+  const valor = parseFloat(document.getElementById('valor').value) || 0;
+  const categoria = document.getElementById('categoria').value;
+  const data = document.getElementById('dataLancamento').value;
 
-  if (!descricao || !valor || valor <= 0) {
-    alert("Preencha a descrição e um valor válido!");
+  const item = {
+    id: Date.now(),
+    tipo,
+    descricao,
+    valor,
+    categoria,
+    data_lancamento: data, // Enviando com o nome exato da coluna do banco
+    data // Mantendo caso o banco também tenha a coluna data
+  };
+
+  // Envia para a nuvem
+  const { error } = await supabaseClient.from('financeiro').insert([item]);
+
+  if (error) {
+    console.error('Erro ao salvar no Supabase:', error);
+    alert('Erro ao salvar na nuvem: ' + error.message);
     return;
   }
 
-  // Insere a linha no banco do Supabase
-  const { error } = await supabaseClient
-    .from("financeiro")
-    .insert([
-      {
-        tipo: tipo,
-        descricao: descricao,
-        valor: valor,
-        categoria: categoria,
-        data_lancamento: dataLancamento
-      }
-    ]);
-
-  if (error) {
-    console.error("Erro ao salvar:", error);
-    alert("Erro ao salvar lançamento no banco de dados.");
-  } else {
-    // Limpa o formulário e recarrega os dados em tempo real
-    document.getElementById("descricao").value = "";
-    document.getElementById("valor").value = "";
-    carregarLancamentos();
-  }
+  // Limpa formulário e atualiza dados
+  document.getElementById('formLancamento').reset();
+  definirDataHoje();
+  carregarDadosNuvem();
 }
 
-// ======================================================
-// DELETAR LANÇAMENTO
-// ======================================================
-async function deletarLancamento(id) {
-  if (!confirm("Tem certeza que deseja excluir esta movimentação?")) return;
-
-  const { error } = await supabaseClient
-    .from("financeiro")
-    .delete()
-    .eq("id", id);
-
-  if (error) {
-    console.error("Erro ao deletar:", error);
-    alert("Erro ao excluir lançamento.");
-  } else {
-    carregarLancamentos();
-  }
-}
-
-// ======================================================
-// RENDERIZAR TABELA E CALCULAR DASHBOARD
-// ======================================================
-function renderizarTabelaEDashboard(lancamentos) {
-  const tabelaCorpo = document.getElementById("tabelaHistorico");
-  tabelaCorpo.innerHTML = "";
-
-  let totalEntradas = 0;
-  let totalSaidas = 0;
-
-  if (!lancamentos || lancamentos.length === 0) {
-    tabelaCorpo.innerHTML = "<tr><td colspan='6' style='text-align:center; color: #777;'>Nenhuma movimentação cadastrada ainda.</td></tr>";
-    atualizarCards(0, 0);
-    return;
-  }
-
-  lancamentos.forEach(item => {
-    // Soma totais para o Dashboard
-    if (item.tipo === "ENTRADA") {
-      totalEntradas += parseFloat(item.valor);
-    } else {
-      totalSaidas += parseFloat(item.valor);
-    }
-
-    // Formata data (AAAA-MM-DD -> DD/MM/AAAA)
-    const dataFormatada = item.data_lancamento.split("-").reverse().join("/");
-
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${dataFormatada}</td>
-      <td class="${item.tipo === 'ENTRADA' ? 'tag-entrada' : 'tag-saida'}">${item.tipo === 'ENTRADA' ? '🟢 ENTRADA' : '🔴 SAÍDA'}</td>
-      <td>${item.descricao}</td>
-      <td>${item.categoria}</td>
-      <td style="font-weight: bold;">R$ ${parseFloat(item.valor).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</td>
-      <td>
-        <button onclick="deletarLancamento(${item.id})" style="background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;">🗑️</button>
-      </td>
+// Carrega todas as movimentações direto do Supabase
+async function carregarDadosNuvem() {
+  const corpoTabela = document.getElementById('tabelaHistorico');
+  if (corpoTabela) {
+    corpoTabela.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align: center; color: #d4af37; padding: 15px;">Sincronizando com a nuvem... 🔄</td>
+      </tr>
     `;
-    tabelaCorpo.appendChild(tr);
-  });
+  }
 
-  atualizarCards(totalEntradas, totalSaidas);
-}
+  const { data, error } = await supabaseClient
+    .from('financeiro')
+    .select('*')
+    .order('id', { ascending: false });
 
-// Atualiza os Cards no topo do Painel
-function atualizarCards(entradas, saidas) {
-  const lucro = entradas - saidas;
-
-  document.getElementById("totalEntradas").innerText = `R$ ${entradas.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`;
-  document.getElementById("totalSaidas").innerText = `R$ ${saidas.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`;
-  
-  const cardLucro = document.getElementById("totalLucro");
-  cardLucro.innerText = `R$ ${lucro.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`;
-  cardLucro.style.color = lucro >= 0 ? "#d4af37" : "#dc3545"; // Fica vermelho se estiver no prejuízo
-}
-
-// Função para Alternar o Menu Retrátil
-function toggleMenu() {
-  const sidebar = document.getElementById("sidebarMenu");
-  const overlay = document.getElementById("menuOverlay");
-  
-  sidebar.classList.toggle("open");
-  overlay.classList.toggle("active");
-}
-
-// Função para atualizar os cards de Lucro e Custo na tela
-function atualizarDashboardFinanceiro() {
-  const historico = obterFinanceiroSalvo(); // Busca os dados do storage.js
-  
-  let faturamento = 0;
-  let custos = 0;
-  const tabelaCorpo = document.getElementById('corpoTabelaFinanceiro');
-  
-  if (tabelaCorpo) tabelaCorpo.innerHTML = '';
-
-  historico.forEach((item, index) => {
-    const valor = parseFloat(item.valor) || 0;
-    
-    if (item.tipo === 'Entrada' || item.tipo === 'Venda') {
-      faturamento += valor;
-    } else if (item.tipo === 'Saida' || item.tipo === 'Custo') {
-      custos += valor;
+  if (error) {
+    console.error('Erro ao buscar dados:', error);
+    if (corpoTabela) {
+      corpoTabela.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align: center; color: #dc3545; padding: 15px;">Erro ao carregar dados da nuvem.</td>
+        </tr>
+      `;
     }
+    return;
+  }
 
-    // Preenche a tabela visual
-    if (tabelaCorpo) {
+  lancamentos = data || [];
+  renderizarPainel();
+}
+
+// Renderiza Tabela e Dashboard de Cards
+function renderizarPainel() {
+  const corpoTabela = document.getElementById('tabelaHistorico');
+  if (!corpoTabela) return;
+
+  corpoTabela.innerHTML = '';
+
+  let faturamento = 0;
+  let despesas = 0;
+
+  if (lancamentos.length === 0) {
+    corpoTabela.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align: center; color: #888; padding: 15px;">Nenhuma movimentação registrada na nuvem.</td>
+      </tr>
+    `;
+  } else {
+    lancamentos.forEach(item => {
+      if (item.tipo === 'ENTRADA') {
+        faturamento += parseFloat(item.valor) || 0;
+      } else {
+        despesas += parseFloat(item.valor) || 0;
+      }
+
+      const dataRaw = item.data_lancamento || item.data || '';
+      let dataFormatada = 'N/A';
+      if (dataRaw) {
+        const partesData = dataRaw.split('T')[0].split('-');
+        if (partesData.length === 3) {
+          dataFormatada = `${partesData[2]}/${partesData[1]}/${partesData[0]}`;
+        }
+      }
+
+      const eEntrada = item.tipo === 'ENTRADA';
+      const corTexto = eEntrada ? '#28a745' : '#dc3545';
+      const sinal = eEntrada ? '+' : '-';
+
       const tr = document.createElement('tr');
-      const corTipo = (item.tipo === 'Entrada' || item.tipo === 'Venda') ? '#4caf50' : '#f44336';
-      
+      tr.style.borderBottom = '1px solid #333';
       tr.innerHTML = `
-        <td>${item.data || '--'}</td>
-        <td>${item.descricao}</td>
-        <td style="color: ${corTipo}; font-weight: bold;">${item.tipo}</td>
-        <td>R$ ${valor.toFixed(2).replace('.', ',')}</td>
-        <td>
-          <button onclick="removerLancamento(${index})" style="background:none; border:none; color:#f44336; cursor:pointer;">🗑️</button>
+        <td style="padding: 10px 6px;">${dataFormatada}</td>
+        <td style="padding: 10px 6px; color: ${corTexto}; font-weight: bold;">${item.tipo}</td>
+        <td style="padding: 10px 6px;">${item.descricao}</td>
+        <td style="padding: 10px 6px; color: #ccc;">${item.categoria}</td>
+        <td style="padding: 10px 6px; color: ${corTexto}; font-weight: bold;">${sinal} R$ ${(parseFloat(item.valor) || 0).toFixed(2)}</td>
+        <td style="padding: 10px 6px; text-align: center;">
+          <button onclick="excluirLancamento(${item.id})" style="background: none; border: none; cursor: pointer; font-size: 1rem;" title="Excluir">🗑️</button>
         </td>
       `;
-      tabelaCorpo.appendChild(tr);
-    }
-  });
+      corpoTabela.appendChild(tr);
+    });
+  }
 
-  const lucro = faturamento - custos;
+  // Atualiza Totais nos Cards
+  const lucro = faturamento - despesas;
 
-  // Atualiza os valores visíveis nos Cards
-  document.getElementById('txtFaturamento').innerText = `R$ ${faturamento.toFixed(2).replace('.', ',')}`;
-  document.getElementById('txtCustos').innerText = `R$ ${custos.toFixed(2).replace('.', ',')}`;
-  
-  const elLucro = document.getElementById('txtLucro');
-  elLucro.innerText = `R$ ${lucro.toFixed(2).replace('.', ',')}`;
-  elLucro.style.color = lucro >= 0 ? '#d4af37' : '#f44336';
+  const elEntradas = document.getElementById('totalEntradas');
+  const elSaidas = document.getElementById('totalSaidas');
+  const elLucro = document.getElementById('totalLucro');
+
+  if (elEntradas) elEntradas.innerText = `R$ ${faturamento.toFixed(2)}`;
+  if (elSaidas) elSaidas.innerText = `R$ ${despesas.toFixed(2)}`;
+  if (elLucro) {
+    elLucro.innerText = `R$ ${lucro.toFixed(2)}`;
+    elLucro.style.color = lucro >= 0 ? '#d4af37' : '#dc3545';
+  }
 }
 
-// Carrega os dados visíveis assim que a página abre
-document.addEventListener('DOMContentLoaded', atualizarDashboardFinanceiro);
+// Exclui registro no Supabase
+async function excluirLancamento(id) {
+  if (confirm('Tem certeza que deseja excluir esta movimentação?')) {
+    const { error } = await supabaseClient.from('financeiro').delete().eq('id', id);
+
+    if (error) {
+      alert('Erro ao excluir: ' + error.message);
+    } else {
+      carregarDadosNuvem();
+    }
+  }
+}
+
+// Preenche data atual por padrão
+function definirDataHoje() {
+  const inputData = document.getElementById('dataLancamento');
+  if (inputData && !inputData.value) {
+    inputData.value = new Date().toISOString().split('T')[0];
+  }
+}
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', () => {
+  definirDataHoje();
+  carregarDadosNuvem();
+});
+
+// EXPORTAR BACKUP (.JSON)
+function baixarBackup() {
+  if (lancamentos.length === 0) {
+    alert("Não há lançamentos para exportar!");
+    return;
+  }
+
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(lancamentos, null, 2));
+  const downloadAnchor = document.createElement('a');
+  const dataHoje = new Date().toISOString().split('T')[0];
+  
+  downloadAnchor.setAttribute("href", dataStr);
+  downloadAnchor.setAttribute("download", `backup_financeiro_dmartferro_${dataHoje}.json`);
+  document.body.appendChild(downloadAnchor);
+  downloadAnchor.click();
+  downloadAnchor.remove();
+}
+
+// RESTAURAR BACKUP (.JSON) PARA O SUPABASE
+async function restaurarBackup(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = async function(e) {
+    try {
+      const dadosImportados = JSON.parse(e.target.result);
+
+      if (!Array.isArray(dadosImportados)) {
+        alert("O arquivo selecionado é inválido.");
+        return;
+      }
+
+      if (confirm(`Deseja importar ${dadosImportados.length} lançamentos para a nuvem?`)) {
+        // Formata os objetos para garantir compatibilidade com o Supabase
+        const itensParaInserir = dadosImportados.map(item => ({
+          id: item.id || Date.now() + Math.floor(Math.random() * 1000),
+          tipo: item.tipo,
+          descricao: item.descricao,
+          valor: parseFloat(item.valor) || 0,
+          categoria: item.categoria,
+          data_lancamento: item.data_lancamento || item.data || new Date().toISOString().split('T')[0],
+          data: item.data || item.data_lancamento || new Date().toISOString().split('T')[0]
+        }));
+
+        const { error } = await supabaseClient.from('financeiro').insert(itensParaInserir);
+
+        if (error) {
+          console.error("Erro ao restaurar backup:", error);
+          alert("Erro ao enviar backup para o banco: " + error.message);
+        } else {
+          alert("Backup restaurado e sincronizado com a nuvem com sucesso!");
+          carregarDadosNuvem();
+        }
+      }
+    } catch (err) {
+      alert("Erro ao ler o arquivo JSON: " + err.message);
+    }
+  };
+  reader.readAsText(file);
+}

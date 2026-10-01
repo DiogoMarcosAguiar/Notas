@@ -26,7 +26,7 @@
       <a href="index.html" class="active">
         <span class="icon">📜</span> Gerador de Notas
       </a>
-      <a href="financeiro.html" class="active">
+      <a href="financeiro.html">
         <span class="icon">📊</span> Faturamento & Caixa
       </a>
     </nav>
@@ -43,10 +43,10 @@
     <header class="header-financeiro">
       <div class="tag-startup">SISTEMA EMISSOR DE NOTAS</div>
       <h1>DMArtFerro <span class="sub-title">| Gestão de Pedidos</span></h1>
-      <p>Gerador Notas e Orçamentos</p>
+      <p>Gerador de Notas e Orçamentos</p>
     </header>
 
-    <!-- Card de Cadastro de Dados da Nota / Pedido -->
+    <!-- Card 1: Informações do Pedido & Cliente -->
     <section class="card-luxo">
       <div class="card-titulo">
         <h2>📋 Informações do Pedido & Cliente</h2>
@@ -54,24 +54,24 @@
       <div class="form-grid">
         <div class="form-group">
           <label for="numPedido">Nº do Pedido:</label>
-          <input type="text" id="numPedido" placeholder="Ex: 001">
+          <input type="text" id="numPedido" placeholder="Ex: 001" oninput="atualizarPreviewNota()">
         </div>
         <div class="form-group">
           <label for="nomeCliente">Nome do Cliente:</label>
-          <input type="text" id="nomeCliente" placeholder="Ex: João Silva">
+          <input type="text" id="nomeCliente" placeholder="Ex: João Silva" oninput="atualizarPreviewNota()">
         </div>
         <div class="form-group">
           <label for="contatoCliente">Contato / Telefone:</label>
-          <input type="text" id="contatoCliente" placeholder="Ex: (11) 99999-9999">
+          <input type="text" id="contatoCliente" placeholder="Ex: (11) 99999-9999" oninput="atualizarPreviewNota()">
         </div>
         <div class="form-group">
           <label for="dataPedido">Data da Nota:</label>
-          <input type="date" id="dataPedido">
+          <input type="date" id="dataPedido" onchange="atualizarPreviewNota()">
         </div>
       </div>
     </section>
 
-    <!-- Card do Formulário de Adicionar Itens -->
+    <!-- Card 2: Adicionar Peça / Item -->
     <section class="card-luxo">
       <div class="card-titulo">
         <h2>🛠️ Adicionar Peça / Item à Nota</h2>
@@ -80,11 +80,11 @@
         <div class="form-grid">
           <div class="form-group">
             <label for="codigoItem">Código da Peça:</label>
-            <input type="text" id="codigoItem" placeholder="T001, C001, F001, P001" required>
+            <input type="text" id="codigoItem" placeholder="T001, C001, F001" required>
           </div>
           <div class="form-group">
             <label for="descricaoItem">Descrição do Produto:</label>
-            <input type="text" id="descricaoItem" placeholder="Tronqueira, Castiçal, Ferro" required>
+            <input type="text" id="descricaoItem" placeholder="Tronqueira, Castiçal, Ferramenta" required>
           </div>
           <div class="form-group">
             <label for="qtdItem">Quantidade:</label>
@@ -99,184 +99,126 @@
       </form>
     </section>
 
-    <!-- Card da Prévia da Nota (O que vira a Imagem da Notinha) -->
+    <!-- Card 3: Prévia da Notinha (Área Capturada pelo HTML2CANVAS) -->
     <section class="card-luxo">
       <div class="card-titulo">
-        <h2>👁️ Prévia da Nota (Visual da Imagem)</h2>
+        <h2>👁️ Prévia da Nota (Visual da Notinha)</h2>
       </div>
 
-      <!-- ESTA É A ÁREA QUE O HTML2CANVAS CAPTURA -->
-      <div id="nota-preview" style="padding: 20px; background-color: #1a1a1a; color: #ffffff;">
-
-      <!-- 1. Cabeçalho (Suas Informações Pessoais / Empresa) -->
-      <div class="nota-header">
-        <h2>DMArtFerro</h2>
-        <p>Serralheria Artística</p>
-        <p>📞 Contato: (11) 98441-6554</p>
-        <p>📧 Email: diogo.m.aguiar30@gmail.com</p>
-
-      </div>
-
-
-      <!-- 3. Tabela de Itens (Tem que estar DENTRO do #nota-preview) -->
-      <table class="tabela-itens" style="width: 100%;">
-        <thead>
-          <tr>
-            <th>Cód</th>
-            <th>Descrição</th>
-            <th>Qtd</th>
-            <th>V. Unit</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <!-- O JavaScript preenche essa tbody! -->
-        <tbody id="corpoTabelaNota"></tbody>
-      </table>
-
-      <!-- 4. Totalizador -->
-      <div class="nota-total" style="text-align: right; margin-top: 10px;">
-        <h3>Total: <span id="lblTotalNota">R$ 0,00</span></h3>
-      </div>
-
-      <!-- 5. QR Code Pix -->
-      <div id="qrCodeContainer" style="display: none; text-align: center; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #444;">
-        <p style="margin: 0; font-size: 0.75rem; color: #d4af37; font-weight: bold;">💳 Pagamento via Pix</p>
-        <img id="imgPixNota" src="QRCodePix.jpeg" alt="QR Code Pix" style="width: 110px; height: 110px; margin: 5px auto; display: block;">
-      </div>
-
-    </div>
-
-
-        </header>
-
-        <hr>
-
-        <!-- Informações do Pedido e Cliente -->
-        <div class="nota-info-grid">
-          <p><strong>Nº do Pedido:</strong> <span id="viewNumPedido">001</span></p>
-          <p><strong>Data:</strong> <span id="viewDataPedido">--/--/----</span></p>
-          <p><strong>Cliente:</strong> <span id="viewNomeCliente">--</span></p>
-          <p><strong>Contato:</strong> <span id="viewContatoCliente">--</span></p>
+      <!-- CONTAINER PRINCIPAL CAPTURADO PELO HTML2CANVAS -->
+      <div id="nota-preview" style="padding: 20px; background-color: #1a1a1a; color: #ffffff; border-radius: 8px; border: 1px solid #d4af37;">
+        
+       <!-- Cabeçalho da Notinha com Logotipo -->
+        <div class="nota-header" style="border-bottom: 1px solid #444; padding-bottom: 12px; margin-bottom: 15px;">
+          <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 6px;">
+            <img src="LOGO1.jpeg" alt="Logo DMArtFerro" style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 1px solid #d4af37;">
+            <h2 style="color: #d4af37; margin: 0; font-size: 1.6rem; letter-spacing: 1px;">DMArtFerro</h2>
+          </div>
+          <p style="margin: 2px 0; font-size: 0.9rem; text-align: center;">Serralheria Artística</p>
+          <p style="margin: 2px 0; font-size: 0.8rem; text-align: center;">📞 Contato: (11) 98441-6554 </p>
+            <p style="margin: 2px 0; font-size: 0.8rem; text-align: center;">📧 E-mail: diogo.m.aguiar30@gmail.com</p>
         </div>
 
-        <hr>
+        <!-- Dados do Pedido e Cliente na Notinha -->
+        <div class="nota-info-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85rem; margin-bottom: 15px;">
+          <p style="margin: 0;"><strong>Nº Pedido:</strong> <span id="viewNumPedido">001</span></p>
+          <p style="margin: 0;"><strong>Data:</strong> <span id="viewDataPedido">--/--/----</span></p>
+          <p style="margin: 0;"><strong>Cliente:</strong> <span id="viewNomeCliente">--</span></p>
+          <p style="margin: 0;"><strong>Contato:</strong> <span id="viewContatoCliente">--</span></p>
+        </div>
 
-        <!-- Tabela de Itens em Destaque Dark/Dourado -->
+        <!-- Tabela de Itens da Notinha -->
         <div class="tabela-wrapper">
-          <table class="tabela-itens">
+          <table class="tabela-itens" style="width: 100%; font-size: 0.85rem;">
             <thead>
-              <tr>
-                <th>Item</th>
-                <th>Cód.</th>
+              <tr style="border-bottom: 1px solid #d4af37; color: #d4af37;">
+                <th>Cód</th>
                 <th>Descrição</th>
                 <th>Qtd</th>
-                <th>Unit.</th>
+                <th>V. Unit</th>
                 <th>Total</th>
                 <th class="coluna-acao">Ação</th>
               </tr>
             </thead>
-            <tbody id="corpoTabela">
-              <!-- Itens entram via JS -->
+            <tbody id="corpoTabelaNota">
+              <!-- Itens do pedido entram aqui pelo JS -->
             </tbody>
           </table>
         </div>
 
-        <!-- Resumo de Valores -->
-        <div class="resumo-valores">
-          <p>Total de Itens: <span id="totalQtdItens">0</span></p>
-          <h3>VALOR TOTAL: <span id="valorTotalNota">R$ 0,00</span></h3>
+        <!-- Resumo / Totalizador -->
+        <div class="resumo-valores" style="text-align: right; margin-top: 15px; border-top: 1px solid #444; padding-top: 10px;">
+          <p style="margin: 2px 0; font-size: 0.85rem;">Total de Itens: <span id="totalQtdItens">0</span></p>
+          <h3 style="color: #d4af37; margin: 5px 0;">VALOR TOTAL: <span id="lblTotalNota">R$ 0,00</span></h3>
         </div>
 
-      
+        <!-- Dados para Pagamento / Pix -->
+        <div id="qrCodeContainer" style="text-align: center; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #444;">
+          <p style="margin: 0; font-size: 0.8rem; color: #d4af37; font-weight: bold;">💳 Pagamento via Pix / Chave CNPJ: 60.266.815/0001-49</p>
+          <img id="imgPixNota" src="QRCodePix.jpeg" alt="QR Code Pix" style="width: 110px; height: 110px; margin: 8px auto 0 auto; display: block;">
         </div>
+
       </div>
 
-      <!-- Botão para Baixar a Nota -->
-      <div style="margin-top: 25px;">
-        <button class="btn-gold-submit" onclick="gerarEBaixarImagemNota()">📸 Baixar Nota</button>
+      <!-- Botão para Baixar a Notinha como Imagem -->
+      <div style="margin-top: 20px;">
+        <button class="btn-gold-submit" onclick="gerarEBaixarImagemNota()">📸 Baixar Notinha (Imagem)</button>
       </div>
     </section>
 
-    <!-- Card do Histórico de Notas Emitidas -->
-<section class="card-luxo">
-  <div class="card-titulo">
-    <h2>📜 Histórico de Notas Emitidas</h2>
-  </div>
-  <div class="tabela-wrapper">
-    <table class="tabela-itens">
-      <thead>
-        <tr>
-          <th>Nº Pedido</th>
-          <th>Data</th>
-          <th>Cliente</th>
-          <th>Qtd Peças</th>
-          <th>Valor Total</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody id="corpoHistoricoNotas">
-        <!-- Notas salvas entrarão aqui automaticamente -->
-      </tbody>
-    </table>
-  </div>
-</section>
+    <!-- Card 4: Histórico e Consulta de Notas -->
+    <section class="card-luxo">
+      <div class="card-titulo">
+        <h2>📋 Histórico e Consulta de Notas 💾</h2>
+      </div>
+      
+      <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+        <input type="text" id="txtBuscaNota" placeholder="Buscar por Nº Pedido ou Nome do Cliente..." oninput="filtrarNotasHistorico()" style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #444; background: #222; color: #fff;">
+      </div>
 
-<section class="card-luxo">
-    <!-- SEÇÃO DE CONSULTA DE NOTAS -->
-<div class="card-painel" style="margin-top: 20px;">
-  <h2>📋 Histórico e Consulta de Notas 💾</h2>
-  
-  <!-- Campo de Pesquisa -->
-  <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-    <input type="text" id="txtBuscaNota" placeholder="Buscar por Nº Pedido ou Nome do Cliente..." oninput="filtrarNotasHistorico()" style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #444; background: #222; color: #fff;">
-  </div>
+      <div class="tabela-wrapper">
+        <table class="tabela-itens" style="width: 100%;">
+          <thead>
+            <tr>
+              <th>Nº Pedido</th>
+              <th>Data</th>
+              <th>Cliente</th>
+              <th>Total</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="corpoTabelaHistoricoNotas">
+            <!-- Historico preenchido pelo JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-  <!-- Tabela de Notas Salvas -->
-  <div style="overflow-x: auto;">
-    <table class="tabela-itens" style="width: 100%;">
-      <thead>
-        <tr>
-          <th>Nº Pedido</th>
-          <th>Data</th>
-          <th>Cliente</th>
-          <th>Total</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody id="corpoTabelaHistoricoNotas">
-        <!-- O JS vai preencher esta tabela -->
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- MODAL / JANELA PARA VER O DETALHE DA NOTA -->
-<div id="modalDetalheNota" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; z-index: 9999;">
-  <div style="background: #1a1a1a; border: 1px solid #d4af37; border-radius: 8px; padding: 20px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px;">
-      <h3 style="color: #d4af37; margin: 0;">Detalhes da Nota</h3>
-      <button onclick="fecharModalNota()" style="background: transparent; color: #ff5555; border: none; font-size: 1.2rem; cursor: pointer;">✖</button>
+    <!-- Modal para Detalhes da Nota -->
+    <div id="modalDetalheNota" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; z-index: 9999;">
+      <div style="background: #1a1a1a; border: 1px solid #d4af37; border-radius: 8px; padding: 20px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px;">
+          <h3 style="color: #d4af37; margin: 0;">Detalhes da Nota</h3>
+          <button onclick="fecharModalNota()" style="background: transparent; color: #ff5555; border: none; font-size: 1.2rem; cursor: pointer;">✖</button>
+        </div>
+        
+        <div id="conteudoModalNota" style="color: #fff;"></div>
+        
+        <div style="margin-top: 20px; text-align: right;">
+          <button onclick="fecharModalNota()" style="padding: 8px 16px; background: #444; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Fechar</button>
+        </div>
+      </div>
     </div>
-    
-    <!-- Conteúdo da Nota Selecionada -->
-    <div id="conteudoModalNota" style="color: #fff;"></div>
-    
-    <div style="margin-top: 20px; text-align: right;">
-      <button onclick="fecharModalNota()" style="padding: 8px 16px; background: #444; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Fechar</button>
-    </div>
-  </div>
-</div>
-
-  </div>
-  <div style="display: flex; gap: 15px; flex-wrap: wrap;">
 
   </main>
 
+  <!-- Scripts Unificados -->
+  
   <script src="script.js"></script>
   <!-- Inclua a biblioteca do html2canvas e os scripts no final do body -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="storage.js"></script>
-  <script src="script.js"></script>
+ 
 </body>
 </body>
 </html>
